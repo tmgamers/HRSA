@@ -5,19 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HRSA Cloud HRIS</title>
     <style>
-        :root {
-            --primary: #17365D; --accent: #1F4E78; --border: #A6B4C2; --bg: #F4F7F6;
-            --btn-green: #70AD47; --btn-red: #C00000; --btn-blue: #0070C0;
-        }
+        :root { --primary: #17365D; --accent: #1F4E78; --border: #A6B4C2; --bg: #F4F7F6; --btn-green: #70AD47; --btn-red: #C00000; --btn-blue: #0070C0; }
         body { font-family: Arial, sans-serif; background-color: var(--bg); margin: 0; padding: 15px; color: #333; }
         .app-header { background-color: var(--primary); color: #fff; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px; margin-bottom: 15px; }
         .app-header h1 { margin: 0; font-size: 20px; }
         .card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.08); margin-bottom: 20px; }
         .btn { background-color: var(--accent); color: #fff; border: none; padding: 9px 16px; border-radius: 4px; font-size: 14px; cursor: pointer; margin: 3px; font-weight: bold; }
-        .btn:hover { opacity: 0.9; }
-        .btn-success { background-color: var(--btn-green); } .btn-danger { background-color: var(--btn-red); }
-        .btn-blue { background-color: var(--btn-blue); padding: 15px 25px; font-size: 18px; }
-        .btn-back { background-color: #595959; } .hidden { display: none !important; }
+        .btn:hover { opacity: 0.9; } .btn-success { background-color: var(--btn-green); } .btn-danger { background-color: var(--btn-red); } .btn-back { background-color: #595959; }
+        .hidden { display: none !important; }
         
         .tab-bar { display: flex; flex-wrap: wrap; background: #e0e0e0; border-radius: 5px; margin-bottom: 15px; overflow: hidden; }
         .tab-btn { flex: 1; padding: 12px; border: none; background: none; font-weight: bold; cursor: pointer; color: #333; border-right: 1px solid #ccc; white-space: nowrap; }
@@ -33,12 +28,11 @@
         th, td { border: 1px solid var(--border); padding: 5px 6px; text-align: center; }
         th { background-color: var(--accent); color: #fff; font-weight: bold; }
         .th-weekend { background-color: #D9D9D9; color: #333; }
-        .sticky-col { position: sticky; left: 0; background: #fff; z-index: 2; }
-        th.sticky-col { background: var(--accent); z-index: 3; }
-        .sticky-col-2 { position: sticky; left: 80px; background: #fff; z-index: 2; }
-        th.sticky-col-2 { background: var(--accent); z-index: 3; }
+        .sticky-col { position: sticky; left: 0; background: #fff; z-index: 2; } th.sticky-col { background: var(--accent); z-index: 3; }
+        .sticky-col-2 { position: sticky; left: 80px; background: #fff; z-index: 2; } th.sticky-col-2 { background: var(--accent); z-index: 3; }
+        .totals-header { background: #A6A6A6; color: #000; }
         
-        .att-input { width: 48px; padding: 4px; text-align: center; border: none; font-weight: bold; font-size: 11px; text-transform: uppercase; border-radius: 2px; }
+        .att-input { width: 42px; padding: 4px; text-align: center; border: none; font-weight: bold; font-size: 11px; text-transform: uppercase; border-radius: 2px; }
         .code-P { background: #E2F0D9; color: #006100; } .code-A { background: #FCE4D6; color: #9C0006; }
         .code-ANL { background: #DDEBF7; color: #1F1F1F; } .code-ANLP { background: #E4DFEC; color: #7030A0; }
         .code-SL { background: #FCE4D6; color: #C65911; } .code-SLP { background: #DDEBF7; color: #0070C0; }
@@ -48,52 +42,38 @@
         .code-CL { background: #EAD1DC; color: #4C1130; } .code-ML { background: #F4CCCC; color: #783F04; }
         .code-PTL { background: #C9DAF8; color: #1155CC; } .code-STL { background: #D9D2E9; color: #351C75; }
         .code-SPL { background: #FCE5CD; color: #783F04; } .code-EL { background: #D0E0E3; color: #0C343D; }
-        .totals-header { background: #A6A6A6; color: #000; font-weight: bold; }
         
         .geo-status { padding: 10px; margin-top: 10px; border-radius: 4px; font-weight: bold; text-align: center; }
         .geo-success { background-color: #E2F0D9; color: #006100; border: 1px solid #70AD47; }
         .geo-error { background-color: #FCE4D6; color: #9C0006; border: 1px solid #C00000; }
-        .emp-dashboard { background: #E4DFEC; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left; }
     </style>
 </head>
 <body>
 
     <div class="app-header">
         <h1>HRSA Standalone HRIS</h1>
-        <div><button class="btn btn-back" onclick="nav('mainMenu')">Switch Role</button></div>
+        <div><button class="btn btn-back" onclick="nav('mainMenu')">Main Menu</button></div>
     </div>
 
-    <!-- MAIN MENU -->
+    <!-- MAIN ROLE SELECTOR -->
     <div id="mainMenu" class="card" style="text-align: center; max-width: 600px; margin: 40px auto;">
         <h2>Select Your Portal</h2>
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
-            <button class="btn btn-blue" style="padding: 20px; font-size: 18px;" onclick="nav('employeePortalScreen')">👤 Employee Portal (Clock-In)</button>
-            <button class="btn" style="padding: 20px; font-size: 18px;" onclick="nav('adminDashboard'); openTab('monthlyRegisterScreen', this)">📊 HR Admin Dashboard</button>
-            <button class="btn" style="padding: 20px; font-size: 18px; background-color: #7f8c8d;" onclick="alert('Contract & Leave Modules Coming Soon')">📝 Contract / Leave Trackers</button>
+            <button class="btn" style="padding: 20px; font-size: 18px; background-color: var(--btn-blue);" onclick="nav('employeePortalScreen')">👤 Employee Portal (Clock-In)</button>
+            <button class="btn" style="padding: 20px; font-size: 18px;" onclick="nav('adminDashboard'); openTab('monthlyRegisterScreen', this)">📊 HR Attendance Control Center</button>
         </div>
     </div>
 
     <!-- EMPLOYEE PORTAL (ESS) -->
     <div id="employeePortalScreen" class="card hidden" style="max-width: 500px; margin: 0 auto; text-align: center;">
-        <h2>Employee Self-Service</h2>
+        <h2>Daily Clock-In</h2>
+        <p>Ensure GPS is enabled. You must be at the office location to clock in.</p>
         <div class="form-group" style="margin-bottom: 20px;">
-            <label style="text-align: center;">Enter Your Employee ID</label>
-            <input type="text" id="empLoginId" placeholder="e.g. TMG001" style="text-align: center; font-size: 18px; text-transform: uppercase;">
-            <button class="btn" style="margin-top: 10px;" onclick="loadEmployeeDashboard()">View My Profile</button>
+            <label style="text-align: center;">Employee ID</label>
+            <input type="text" id="clockInEmpId" placeholder="e.g. TMG001" style="text-align: center; font-size: 18px; text-transform: uppercase;">
         </div>
-
-        <div id="empDashboardArea" class="hidden">
-            <div class="emp-dashboard">
-                <h3 id="essName" style="margin: 0 0 10px 0;">Welcome</h3>
-                <p style="margin: 5px 0;"><strong>Designation:</strong> <span id="essRole"></span></p>
-                <p style="margin: 5px 0;"><strong>Total Leave Allowance:</strong> <span id="essTotalLeave"></span> days</p>
-                <p style="margin: 5px 0;"><strong>Remaining Leave:</strong> <span id="essRemLeave" style="color: #006100; font-weight: bold; font-size: 16px;"></span> days</p>
-            </div>
-            
-            <p style="font-size: 12px; color: #555;">GPS validation required to clock in.</p>
-            <button class="btn btn-success" style="padding: 15px 30px; font-size: 18px; border-radius: 50px; width: 100%;" onclick="attemptClockIn()">📍 CLOCK IN (PRESENT)</button>
-            <div id="geoStatus" class="geo-status hidden"></div>
-        </div>
+        <button class="btn btn-success" style="padding: 20px 40px; font-size: 20px; border-radius: 50px;" onclick="attemptClockIn()">📍 CLOCK IN NOW</button>
+        <div id="geoStatus" class="geo-status hidden"></div>
     </div>
 
     <!-- HR ADMIN DASHBOARD -->
@@ -101,15 +81,16 @@
         <div class="tab-bar">
             <button class="tab-btn active" onclick="openTab('monthlyRegisterScreen', this)">📅 Monthly Register</button>
             <button class="tab-btn" onclick="openTab('employeeDbScreen', this)">👥 Employee DB</button>
-            <button class="tab-btn" onclick="openTab('fmkPasteScreen', this)">⚡ Bulk Paste</button>
+            <button class="tab-btn" onclick="openTab('fmkPasteScreen', this)">⚡ FMK Paste</button>
             <button class="tab-btn" onclick="openTab('annualSummaryScreen', this)">📈 Annual Summary</button>
             <button class="tab-btn" onclick="openTab('searchScreen', this)">🔍 Search</button>
-            <button class="tab-btn" onclick="openTab('settingsScreen', this)">⚙️ Backup & Settings</button>
+            <button class="tab-btn" onclick="openTab('leaderboardScreen', this)">🏆 Leaderboard</button>
+            <button class="tab-btn" onclick="openTab('settingsScreen', this)">⚙️ Backup & Setup</button>
         </div>
 
-        <!-- MONTHLY REGISTER -->
+        <!-- 1. MONTHLY REGISTER -->
         <div id="monthlyRegisterScreen" class="card tab-content">
-            <h2>Monthly Register</h2>
+            <h2>Monthly Attendance Register</h2>
             <div class="form-row">
                 <div class="form-group">
                     <label>Year</label>
@@ -127,7 +108,7 @@
                     </select>
                 </div>
                 <div style="align-self: flex-end;">
-                    <button class="btn btn-success" onclick="saveMonthlyAttendance()">💾 Save Changes</button>
+                    <button class="btn btn-success" onclick="saveMonthlyAttendance()">💾 Submit Attendance</button>
                     <span id="saveStatus" style="margin-left: 10px; font-weight: bold; color: green;"></span>
                 </div>
             </div>
@@ -139,40 +120,40 @@
             </div>
         </div>
 
-        <!-- EMPLOYEE DB -->
+        <!-- 2. EMPLOYEE DB -->
         <div id="employeeDbScreen" class="card tab-content hidden">
             <h2>Employee Database</h2>
             <div class="form-row">
                 <div class="form-group"><label>Employee ID *</label><input type="text" id="newEmpId" placeholder="TMG001"></div>
-                <div class="form-group"><label>Name *</label><input type="text" id="newEmpName" placeholder="Full Name"></div>
+                <div class="form-group"><label>Employee Name *</label><input type="text" id="newEmpName"></div>
                 <div class="form-group"><label>Designation *</label><input type="text" id="newEmpRole"></div>
-                <div class="form-group"><label>Leave Allowance</label><input type="number" id="newEmpLeaveAllowance" value="21"></div>
-                <div class="form-group"><label>Start Date *</label><input type="date" id="newEmpStart" value="2026-01-01"></div>
+                <div class="form-group"><label>Start Date *</label><input type="date" id="newEmpStart" value="2025-01-01"></div>
+                <div class="form-group"><label>End Date (Optional)</label><input type="date" id="newEmpEnd"></div>
                 <div class="form-group"><label>Status</label><select id="newEmpStatus"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></div>
-                <div class="form-group" style="align-self: flex-end;"><button class="btn btn-success" onclick="addEmployee()">Add Employee</button></div>
+                <div class="form-group" style="align-self: flex-end;"><button class="btn btn-success" onclick="addEmployee()">Submit Employee</button></div>
             </div>
             <div class="table-wrapper">
                 <table>
-                    <thead><tr><th>ID</th><th>Name</th><th>Designation</th><th>Leave Allowance</th><th>Start Date</th><th>Status</th><th>Action</th></tr></thead>
+                    <thead><tr><th>Employee ID</th><th>Employee Name</th><th>Designation</th><th>Start Date</th><th>End Date</th><th>Status</th><th>Action</th></tr></thead>
                     <tbody id="employeeTableBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- FMK BULK PASTE -->
+        <!-- 3. FMK BULK PASTE -->
         <div id="fmkPasteScreen" class="card tab-content hidden">
             <h2>FMK Bulk Paste Engine</h2>
             <p>Paste bulk attendance data from Excel. Format: <strong>Employee ID | Date (YYYY-MM-DD) | Code</strong></p>
             <textarea id="fmkInput" rows="10" style="width: 100%; border: 1px solid var(--border);" placeholder="TMG001    2026-05-14    P&#10;TMG002    2026-05-14    ML"></textarea>
             <div style="margin-top: 10px;">
-                <button class="btn btn-success" onclick="processFmkPaste()">⚡ Process & Save</button>
+                <button class="btn btn-success" onclick="processFmkPaste()">⚡ Process & Save Data</button>
                 <span id="fmkStatus" style="margin-left: 10px; font-weight: bold; color: green;"></span>
             </div>
         </div>
 
-        <!-- ANNUAL SUMMARY -->
+        <!-- 4. ANNUAL SUMMARY -->
         <div id="annualSummaryScreen" class="card tab-content hidden">
-            <h2>Annual Summary Report</h2>
+            <h2>Annual Attendance Summary</h2>
             <div class="form-row">
                 <div class="form-group">
                     <label>Reporting Year</label>
@@ -180,60 +161,62 @@
                         <option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option>
                     </select>
                 </div>
-                <div style="align-self: flex-end;">
-                    <button class="btn btn-blue" onclick="renderAnnualSummary()">🔄 Refresh Report</button>
-                </div>
+                <div style="align-self: flex-end;"><button class="btn btn-blue" onclick="renderAnnualSummary()">🔄 Refresh Summary</button></div>
             </div>
             <div class="table-wrapper">
                 <table>
-                    <thead>
-                        <tr>
-                            <th class="sticky-col">ID</th><th class="sticky-col-2">Name</th>
-                            <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th>
-                            <th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th>
-                            <th class="totals-header">Expected</th><th class="totals-header">Total P</th>
-                            <th class="totals-header">Total Leaves</th><th class="totals-header">Att %</th>
-                        </tr>
-                    </thead>
+                    <thead><tr id="annualSummaryHeader"></tr></thead>
                     <tbody id="annualSummaryBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- SEARCH -->
+        <!-- 5. SEARCH -->
         <div id="searchScreen" class="card tab-content hidden">
             <h2>Search Attendance</h2>
             <div class="form-row">
-                <div class="form-group"><label>Name or ID</label><input type="text" id="searchTerm" placeholder="Search..."></div>
-                <div class="form-group"><label>From</label><input type="date" id="searchFrom"></div>
-                <div class="form-group"><label>To</label><input type="date" id="searchTo"></div>
-                <div style="align-self: flex-end;"><button class="btn btn-success" onclick="runSearch()">Search</button></div>
+                <div class="form-group"><label>Employee name or ID</label><input type="text" id="searchTerm" placeholder="Search..."></div>
+                <div class="form-group"><label>From date</label><input type="date" id="searchFrom"></div>
+                <div class="form-group"><label>To date</label><input type="date" id="searchTo"></div>
+                <div style="align-self: flex-end;"><button class="btn btn-success" onclick="runSearch()">Search</button> <button class="btn btn-danger" onclick="clearSearch()">Clear</button></div>
             </div>
             <div class="table-wrapper">
                 <table>
-                    <thead><tr><th>Employee ID</th><th>Name</th><th>Date</th><th>Code</th></tr></thead>
+                    <thead><tr id="searchHeader"></tr></thead>
                     <tbody id="searchResultsBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- BACKUP & SETTINGS (CRITICAL FOR STANDALONE) -->
+        <!-- 6. LEADERBOARD -->
+        <div id="leaderboardScreen" class="card tab-content hidden">
+            <h2>Attendance Leaderboard</h2>
+            <div class="form-row">
+                <div class="form-group"><label>Show Top</label><select id="lbTopN" onchange="renderLeaderboard()"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option></select></div>
+                <div class="form-group"><label>Year</label><select id="lbYear" onchange="renderLeaderboard()"><option value="All">All Years</option><option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option></select></div>
+                <div class="form-group"><label>Month</label><select id="lbMonth" onchange="renderLeaderboard()"><option value="All">All Months</option><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select></div>
+                <div class="form-group"><label>Rank By</label><select id="lbMetric" onchange="renderLeaderboard()"><option value="Overall Rank">Overall Rank</option><option value="Attendance %">Attendance %</option><option value="Total Present (P)">Total Present (P)</option><option value="Total Expected Days">Total Expected Days</option></select></div>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Rank</th><th>Employee ID</th><th>Employee Name</th><th>Metric</th><th>Value</th><th>Reward Status</th></tr></thead>
+                    <tbody id="leaderboardBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 7. BACKUP & SETTINGS -->
         <div id="settingsScreen" class="card tab-content hidden">
             <h2>System Backup & Recovery</h2>
-            <p><strong>Warning:</strong> Because this app is fully standalone and disconnected from Google Sheets, your data lives in this browser. You MUST download a backup file periodically to prevent data loss.</p>
-            
+            <p>Download a backup file periodically to save your database offline.</p>
             <div class="form-row" style="margin-top: 20px;">
                 <div class="card" style="background: #E2F0D9; border: 1px solid #70AD47; flex: 1;">
                     <h3 style="color: #006100; margin-top: 0;">Step 1: Export Database</h3>
-                    <p style="font-size: 12px;">Download your entire system (Employees + Attendance) to your computer.</p>
                     <button class="btn btn-success" onclick="exportDatabase()">📥 Download Backup File (.json)</button>
                 </div>
-
                 <div class="card" style="background: #FCE4D6; border: 1px solid #C00000; flex: 1;">
                     <h3 style="color: #9C0006; margin-top: 0;">Step 2: Restore Database</h3>
-                    <p style="font-size: 12px;">Upload a previously downloaded .json file to restore data (Overwrites current data!).</p>
-                    <input type="file" id="backupFile" accept=".json" style="margin-bottom: 10px;">
-                    <br>
+                    <input type="file" id="backupFile" accept=".json" style="margin-bottom: 10px;"><br>
                     <button class="btn btn-danger" onclick="importDatabase()">📤 Restore from File</button>
                 </div>
             </div>
@@ -242,24 +225,21 @@
     </div>
 
     <script>
-        // SYSTEM VARIABLES & CODES
+        // --- 1. CORE CONFIGURATION (EXACT MATCH TO GOOGLE SHEET) ---
         const VALID_CODES = ['P', 'A', 'ANL', 'ANL/P', 'SL', 'SL/P', 'UPL', 'H', 'OD', 'DO', 'W', 'CL', 'ML', 'PTL', 'STL', 'SPL', 'EL', '-'];
         const PAID_LEAVES = ['ANL/P', 'SL/P', 'CL', 'ML', 'PTL', 'STL', 'SPL', 'EL'];
-        const LEAVE_TYPES = ['ANL', 'ANL/P', 'SL', 'SL/P', 'UPL', 'CL', 'ML', 'PTL', 'STL', 'SPL', 'EL'];
+        const ALL_LEAVES = ['ANL', 'ANL/P', 'SL', 'SL/P', 'UPL', 'CL', 'ML', 'PTL', 'STL', 'SPL', 'EL'];
         const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         
-        // GPS CONFIG
-        const OFFICE_LAT = 8.484; 
-        const OFFICE_LON = -13.229;
-        const ALLOWED_RADIUS_METERS = 200000; // Increased for testing
+        const HEADERS_SUMMARY = ['Expected Days','Total Leave','Reward Status','Total Present (P)','Total Absent (A)','Attendance %','Annual Leave (ANL)','Sick Leave (SL)','Annual Paid Leave (ANL/P)','Unpaid Leave (UPL)','Public Holidays (H)','Day Off (DO)','On Duty (OD)','Paid Sick Leave (SL/P)','Compassionate Leave (CL)','Maternity Leave (ML)','Paternity Leave (PTL)','Study Leave (STL)','Special Leave (SPL)','Earned Leave (EL)'];
+        
+        const OFFICE_LAT = 8.484, OFFICE_LON = -13.229, ALLOWED_RADIUS_METERS = 200000; 
 
+        // --- 2. NAVIGATION & DATA STORAGE ---
         function nav(screenId) {
-            document.getElementById('mainMenu').classList.add('hidden');
-            document.getElementById('employeePortalScreen').classList.add('hidden');
-            document.getElementById('adminDashboard').classList.add('hidden');
+            ['mainMenu', 'employeePortalScreen', 'adminDashboard'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById(screenId).classList.remove('hidden');
         }
-
         function openTab(tabId, btnElement) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -270,6 +250,7 @@
             if(tabId === 'employeeDbScreen') renderEmployees();
             if(tabId === 'annualSummaryScreen') renderAnnualSummary();
             if(tabId === 'searchScreen') runSearch();
+            if(tabId === 'leaderboardScreen') renderLeaderboard();
         }
 
         function getEmployees() { return JSON.parse(localStorage.getItem('hrsa_employees')) || []; }
@@ -277,78 +258,48 @@
         function getAttendanceDb() { return JSON.parse(localStorage.getItem('hrsa_attendance_db')) || {}; }
         function setAttendanceDb(data) { localStorage.setItem('hrsa_attendance_db', JSON.stringify(data)); }
 
-        // --- BACKUP SYSTEM (CRITICAL FOR STANDALONE) ---
-        function exportDatabase() {
-            const data = { employees: getEmployees(), attendance: getAttendanceDb() };
-            const blob = new Blob([JSON.stringify(data)], {type: "application/json"});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `HRSA_Database_Backup_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-        }
+        // --- 3. MASTER MATHEMATICS ENGINE (MIRRORS APPS SCRIPT FORMULAS EXACTLY) ---
+        // This helper calculates the exact same values as your Google Sheet for any given month
+        function calculateEmployeeMonthTotals(emp, year, month, attDb) {
+            let exp = 0, cred = 0, p = 0, a = 0, leaves = 0, paidLeaves = 0;
+            let counts = {}; VALID_CODES.forEach(c => counts[c] = 0);
+            let days = new Date(year, month, 0).getDate();
+            let start = new Date(emp.start);
+            let end = emp.end ? new Date(emp.end) : new Date(9999,0,1);
 
-        function importDatabase() {
-            const file = document.getElementById('backupFile').files[0];
-            if (!file) return alert("Please select a .json backup file first.");
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (data.employees && data.attendance) {
-                        setEmployees(data.employees);
-                        setAttendanceDb(data.attendance);
-                        alert("Database restored successfully!");
-                        renderEmployees();
-                    } else { alert("Invalid backup file format."); }
-                } catch (err) { alert("Error reading file. Ensure it is a valid JSON backup."); }
-            };
-            reader.readAsText(file);
-        }
-
-        // --- EMPLOYEE PORTAL & LEAVE MATH ---
-        function calculateEmployeeLeaveBalance(empId, year) {
-            const attDb = getAttendanceDb();
-            let utilized = 0;
-            Object.keys(attDb).forEach(key => {
-                if (key.startsWith(empId.toLowerCase() + '|' + year)) {
-                    const code = attDb[key];
-                    // Count only if it's a leave type
-                    if (LEAVE_TYPES.includes(code)) utilized++;
+            for(let d=1; d<=days; d++){
+                let date = new Date(year, month-1, d);
+                let isWknd = (date.getDay()===0 || date.getDay()===6);
+                let isEmp = (date >= start && date <= end);
+                
+                if(isEmp && !isWknd) {
+                    let dateStr = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                    let code = attDb[`${emp.id.toLowerCase()}|${dateStr}`] || '';
+                    if(code) counts[code] = (counts[code]||0)+1;
+                    if(PAID_LEAVES.includes(code)) paidLeaves++;
+                    if(['P','OD','DO','H'].includes(code)) cred++;
+                    if(code === 'P') p++;
+                    if(code === 'A') a++;
+                    if(ALL_LEAVES.includes(code)) leaves++;
+                    exp++;
                 }
-            });
-            return utilized;
+            }
+            let expected = Math.max(0, exp - paidLeaves);
+            let pct = expected > 0 ? cred/expected : 0;
+            let reward = (expected > 0 && pct === 1) ? 'Eligible' : 'Not eligible';
+            return { expected, cred, p, a, leaves, counts, pct, reward };
         }
 
-        let currentESS_Employee = null;
-        function loadEmployeeDashboard() {
-            const empId = document.getElementById('empLoginId').value.trim().toUpperCase();
-            if(!empId) return alert("Enter your ID");
-            const emp = getEmployees().find(e => e.id.toUpperCase() === empId);
-            if(!emp) return alert("Employee not found in Database.");
-            
-            currentESS_Employee = emp;
-            document.getElementById('essName').innerText = `Welcome, ${emp.name}`;
-            document.getElementById('essRole').innerText = emp.role;
-            
-            const currentYear = new Date().getFullYear();
-            const utilizedLeaves = calculateEmployeeLeaveBalance(emp.id, currentYear);
-            const allowance = parseFloat(emp.leaveAllowance) || 0;
-            
-            document.getElementById('essTotalLeave').innerText = allowance;
-            document.getElementById('essRemLeave').innerText = Math.max(0, allowance - utilizedLeaves);
-            
-            document.getElementById('empDashboardArea').classList.remove('hidden');
-            document.getElementById('geoStatus').classList.add('hidden');
-        }
-
+        // --- 4. EMPLOYEE PORTAL ---
         function attemptClockIn() {
-            if(!currentESS_Employee) return;
+            const empId = document.getElementById('clockInEmpId').value.trim().toUpperCase();
             const statusBox = document.getElementById('geoStatus');
             statusBox.classList.remove('hidden', 'geo-success', 'geo-error');
-            statusBox.innerText = "Checking GPS..."; statusBox.style.backgroundColor = "#FFF2CC";
-
+            if (!empId) { statusBox.innerText = "Enter ID."; statusBox.classList.add('geo-error'); return; }
+            if (!getEmployees().some(e => e.id.toUpperCase() === empId)) { statusBox.innerText = "ID not found."; statusBox.classList.add('geo-error'); return; }
             if (!navigator.geolocation) { statusBox.innerText = "GPS not supported."; statusBox.classList.add('geo-error'); return; }
+
+            statusBox.innerText = "Checking GPS..."; statusBox.style.backgroundColor = "#FFF2CC";
 
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
@@ -360,22 +311,98 @@
                     if (dist <= ALLOWED_RADIUS_METERS) {
                         const db = getAttendanceDb(), today = new Date();
                         const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-                        db[`${currentESS_Employee.id.toLowerCase()}|${dateStr}`] = 'P';
-                        setAttendanceDb(db);
-                        statusBox.innerText = `✅ Clocked In Successfully! (Dist: ${Math.round(dist)}m)`;
-                        statusBox.classList.add('geo-success');
+                        db[`${empId.toLowerCase()}|${dateStr}`] = 'P'; setAttendanceDb(db);
+                        statusBox.innerText = `✅ Clocked In Successfully! (Dist: ${Math.round(dist)}m)`; statusBox.classList.add('geo-success');
                     } else {
-                        statusBox.innerText = `❌ Too far from office! (Dist: ${Math.round(dist)}m)`;
-                        statusBox.classList.add('geo-error');
+                        statusBox.innerText = `❌ Too far from office! (Dist: ${Math.round(dist)}m)`; statusBox.classList.add('geo-error');
                     }
                     statusBox.style.backgroundColor = ""; 
                 },
-                (err) => { statusBox.innerText = "❌ GPS Access Denied."; statusBox.classList.add('geo-error'); statusBox.style.backgroundColor = ""; },
+                (err) => { statusBox.innerText = "❌ GPS Denied."; statusBox.classList.add('geo-error'); statusBox.style.backgroundColor = ""; },
                 { enableHighAccuracy: true, timeout: 10000 }
             );
         }
 
-        // --- FMK BULK PASTE ---
+        // --- 5. MONTHLY REGISTER ---
+        function renderMonthlyRegister() {
+            const year = parseInt(document.getElementById('regYear').value, 10), month = parseInt(document.getElementById('regMonth').value, 10);
+            const totalDays = new Date(year, month, 0).getDate(), employees = getEmployees().filter(e => e.status === 'Active'), attDb = getAttendanceDb();
+            
+            const headerRow = document.getElementById('headerRow');
+            headerRow.innerHTML = `<th class="sticky-col">Employee ID</th><th class="sticky-col-2">Employee Name</th><th>Designation</th>`;
+            for (let d=1; d<=totalDays; d++) {
+                const dateObj = new Date(year, month - 1, d), isWeekend = (dateObj.getDay()===0 || dateObj.getDay()===6);
+                headerRow.innerHTML += `<th class="${isWeekend?'th-weekend':''}">${String(d).padStart(2,'0')}<br><span style="font-size:10px;">${DAY_NAMES[dateObj.getDay()]}</span></th>`;
+            }
+            HEADERS_SUMMARY.forEach(h => headerRow.innerHTML += `<th class="totals-header">${h}</th>`);
+
+            const tbody = document.getElementById('monthlyBody'); tbody.innerHTML = '';
+            if (!employees.length) return tbody.innerHTML = `<tr><td colspan="${totalDays+23}">No data</td></tr>`;
+
+            employees.forEach(emp => {
+                const tr = document.createElement('tr'); tr.setAttribute('data-empid', emp.id);
+                let rowHtml = `<td class="sticky-col"><strong>${emp.id}</strong></td><td class="sticky-col-2">${emp.name}</td><td>${emp.role}</td>`;
+                const start = new Date(emp.start), end = emp.end ? new Date(emp.end) : new Date(9999,0,1);
+                
+                for (let d=1; d<=totalDays; d++) {
+                    const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                    const dateObj = new Date(year, month-1, d), isWeekend = (dateObj.getDay()===0 || dateObj.getDay()===6), isEmployed = (dateObj >= start && dateObj <= end);
+                    let val = attDb[`${emp.id.toLowerCase()}|${dateStr}`] || (isWeekend ? 'W' : (isEmployed ? '-' : '-'));
+                    let codeClass = !isEmployed && !isWeekend ? 'code-OUT' : `code-${val.replace('/','')}`;
+                    rowHtml += `<td><input type="text" class="att-input ${codeClass}" value="${val}" data-date="${dateStr}" onchange="handleCodeChange(this)"></td>`;
+                }
+                
+                const t = calculateEmployeeMonthTotals(emp, year, month, attDb);
+                const statHTML = `
+                    <td>${t.expected}</td><td>${t.leaves}</td><td>${t.reward}</td><td>${t.p}</td><td>${t.a}</td><td>${(t.pct*100).toFixed(1)}%</td>
+                    <td>${t.counts['ANL']}</td><td>${t.counts['SL']}</td><td>${t.counts['ANL/P']}</td><td>${t.counts['UPL']}</td><td>${t.counts['H']}</td><td>${t.counts['DO']}</td>
+                    <td>${t.counts['OD']}</td><td>${t.counts['SL/P']}</td><td>${t.counts['CL']}</td><td>${t.counts['ML']}</td><td>${t.counts['PTL']}</td><td>${t.counts['STL']}</td>
+                    <td>${t.counts['SPL']}</td><td>${t.counts['EL']}</td>`;
+                
+                tr.innerHTML = rowHtml + statHTML; tbody.appendChild(tr);
+            });
+        }
+
+        function handleCodeChange(input) {
+            let val = input.value.trim().toUpperCase();
+            if (!VALID_CODES.includes(val) && val !== '') { alert(`Invalid code.`); val = '-'; input.value = val; }
+            input.className = `att-input code-${val.replace('/', '')}`;
+        }
+
+        function saveMonthlyAttendance() {
+            const attDb = getAttendanceDb();
+            document.querySelectorAll('#monthlyBody .att-input').forEach(input => {
+                const key = `${input.closest('tr').getAttribute('data-empid').toLowerCase()}|${input.getAttribute('data-date')}`;
+                const code = input.value.trim().toUpperCase();
+                if (code === '-' || code === 'W' || code === '') delete attDb[key]; else attDb[key] = code;
+            });
+            setAttendanceDb(attDb);
+            const status = document.getElementById('saveStatus'); status.innerText = 'Saved!'; setTimeout(() => status.innerText = '', 3000);
+            renderMonthlyRegister(); // Refresh formulas automatically!
+        }
+
+        // --- 6. EMPLOYEE DB ---
+        function renderEmployees() {
+            const tbody = document.getElementById('employeeTableBody'); tbody.innerHTML = '';
+            const employees = getEmployees();
+            if (!employees.length) return tbody.innerHTML = '<tr><td colspan="7">No employees found.</td></tr>';
+            employees.forEach((emp, i) => {
+                tbody.innerHTML += `<tr><td><strong>${emp.id}</strong></td><td>${emp.name}</td><td>${emp.role}</td><td>${emp.start}</td><td>${emp.end||''}</td><td>${emp.status}</td><td><button class="btn btn-danger" onclick="deleteEmployee(${i})">Del</button></td></tr>`;
+            });
+        }
+        function addEmployee() {
+            const id = document.getElementById('newEmpId').value.trim(), name = document.getElementById('newEmpName').value.trim();
+            const role = document.getElementById('newEmpRole').value.trim(), start = document.getElementById('newEmpStart').value;
+            const end = document.getElementById('newEmpEnd').value, status = document.getElementById('newEmpStatus').value;
+            if (!id || !name || !role || !start) return alert('Fill required fields.');
+            const employees = getEmployees();
+            if (employees.some(e => e.id.toLowerCase() === id.toLowerCase())) return alert('ID exists.');
+            employees.push({ id, name, role, start, end, status });
+            setEmployees(employees); renderEmployees();
+        }
+        function deleteEmployee(i) { if(confirm('Delete employee?')) { const emp = getEmployees(); emp.splice(i, 1); setEmployees(emp); renderEmployees(); } }
+
+        // --- 7. FMK PASTE ---
         function processFmkPaste() {
             const raw = document.getElementById('fmkInput').value.trim();
             if(!raw) return alert("Paste data first!");
@@ -388,180 +415,150 @@
                 }
             });
             setAttendanceDb(db); document.getElementById('fmkInput').value = '';
-            document.getElementById('fmkStatus').innerText = `✅ Saved ${count} records!`;
-            setTimeout(() => document.getElementById('fmkStatus').innerText = '', 4000);
+            document.getElementById('fmkStatus').innerText = `✅ Saved ${count} records!`; setTimeout(() => document.getElementById('fmkStatus').innerText = '', 4000);
         }
 
-        // --- EMPLOYEE DB ---
-        function renderEmployees() {
-            const tbody = document.getElementById('employeeTableBody'); tbody.innerHTML = '';
-            const employees = getEmployees();
-            if (!employees.length) return tbody.innerHTML = '<tr><td colspan="7">No employees found.</td></tr>';
-            employees.forEach((emp, i) => {
-                tbody.innerHTML += `<tr><td><strong>${emp.id}</strong></td><td>${emp.name}</td><td>${emp.role}</td><td><strong>${emp.leaveAllowance||0}</strong></td><td>${emp.start}</td><td>${emp.status}</td><td><button class="btn btn-danger" onclick="deleteEmployee(${i})">Del</button></td></tr>`;
-            });
-        }
-        function addEmployee() {
-            const id = document.getElementById('newEmpId').value.trim(), name = document.getElementById('newEmpName').value.trim();
-            const role = document.getElementById('newEmpRole').value.trim(), leave = parseFloat(document.getElementById('newEmpLeaveAllowance').value)||0;
-            const start = document.getElementById('newEmpStart').value, status = document.getElementById('newEmpStatus').value;
-            if (!id || !name || !role || !start) return alert('Fill required fields.');
-            const employees = getEmployees();
-            if (employees.some(e => e.id.toLowerCase() === id.toLowerCase())) return alert('ID exists.');
-            employees.push({ id, name, role, leaveAllowance: leave, start, status });
-            setEmployees(employees); renderEmployees();
-        }
-        function deleteEmployee(i) { if(confirm('Delete?')) { const emp = getEmployees(); emp.splice(i, 1); setEmployees(emp); renderEmployees(); } }
-
-        // --- MONTHLY REGISTER ---
-        function daysInMonth(y, m) { return new Date(y, m, 0).getDate(); }
-        function renderMonthlyRegister() {
-            const year = parseInt(document.getElementById('regYear').value, 10), month = parseInt(document.getElementById('regMonth').value, 10);
-            const totalDays = daysInMonth(year, month), employees = getEmployees().filter(e => e.status === 'Active'), attDb = getAttendanceDb();
-            const headerRow = document.getElementById('headerRow');
-            headerRow.innerHTML = `<th class="sticky-col">ID</th><th class="sticky-col-2">Name</th>`;
-            for (let d=1; d<=totalDays; d++) {
-                const dateObj = new Date(year, month - 1, d), isWeekend = (dateObj.getDay()===0 || dateObj.getDay()===6);
-                headerRow.innerHTML += `<th class="${isWeekend?'th-weekend':''}">${String(d).padStart(2,'0')}<br><span style="font-size:10px;">${DAY_NAMES[dateObj.getDay()]}</span></th>`;
-            }
-            headerRow.innerHTML += `
-                <th class="totals-header">P</th><th class="totals-header">A</th><th class="totals-header">Att %</th>
-                <th class="totals-header">CL</th><th class="totals-header">ML</th><th class="totals-header">PTL</th><th class="totals-header">STL</th><th class="totals-header">SPL</th><th class="totals-header">EL</th>
-                <th class="totals-header">TOTAL<br>LEAVE</th><th class="totals-header">REM<br>LEAVE</th>`;
-
-            const tbody = document.getElementById('monthlyBody'); tbody.innerHTML = '';
-            if (!employees.length) return tbody.innerHTML = `<tr><td colspan="${totalDays+13}">No data</td></tr>`;
-
-            employees.forEach(emp => {
-                const tr = document.createElement('tr'); tr.setAttribute('data-empid', emp.id); tr.setAttribute('data-actualleave', emp.leaveAllowance || 0);
-                let rowHtml = `<td class="sticky-col"><strong>${emp.id}</strong></td><td class="sticky-col-2">${emp.name}</td>`;
-                for (let d=1; d<=totalDays; d++) {
-                    const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                    const dateObj = new Date(year, month-1, d), isWeekend = (dateObj.getDay()===0 || dateObj.getDay()===6), isEmployed = (dateObj >= new Date(emp.start));
-                    let val = attDb[`${emp.id.toLowerCase()}|${dateStr}`] || (isWeekend ? 'W' : (isEmployed ? '-' : '-'));
-                    let codeClass = !isEmployed && !isWeekend ? 'code-OUT' : `code-${val.replace('/','')}`;
-                    rowHtml += `<td><input type="text" class="att-input ${codeClass}" value="${val}" data-date="${dateStr}" data-weekend="${isWeekend}" data-employed="${isEmployed}" onchange="handleCodeChange(this)"></td>`;
-                }
-                rowHtml += `<td class="col-p">0</td><td class="col-a">0</td><td class="col-att-pct">0.0%</td>
-                <td class="col-cl">0</td><td class="col-ml">0</td><td class="col-ptl">0</td><td class="col-stl">0</td><td class="col-spl">0</td><td class="col-el">0</td>
-                <td class="col-total-leave" style="font-weight:bold;">0</td><td class="col-remaining-leave" style="font-weight:bold; color:#006100;">${emp.leaveAllowance||0}</td>`;
-                tr.innerHTML = rowHtml; tbody.appendChild(tr); calculateRowTotals(tr);
-            });
-        }
-        function handleCodeChange(input) {
-            let val = input.value.trim().toUpperCase();
-            if (!VALID_CODES.includes(val) && val !== '') { alert(`Invalid code.`); val = '-'; input.value = val; }
-            input.className = `att-input code-${val.replace('/', '')}`; calculateRowTotals(input.closest('tr'));
-        }
-        function calculateRowTotals(tr) {
-            const counts = {}; VALID_CODES.forEach(c => counts[c] = 0);
-            let expectedWorkdays = 0, credit = 0;
-            tr.querySelectorAll('.att-input').forEach(input => {
-                const code = input.value.trim().toUpperCase(), isWeekend = input.getAttribute('data-weekend') === 'true', isEmployed = input.getAttribute('data-employed') === 'true';
-                if (counts[code] !== undefined) counts[code]++;
-                if (isEmployed && !isWeekend) { expectedWorkdays++; if (['P', 'OD', 'DO', 'H'].includes(code)) credit++; }
-            });
-            const cl=counts.CL||0, ml=counts.ML||0, ptl=counts.PTL||0, stl=counts.STL||0, spl=counts.SPL||0, el=counts.EL||0;
-            const anl = (counts['ANL']||0)+(counts['ANL/P']||0), sl = (counts['SL']||0)+(counts['SL/P']||0), upl=counts.UPL||0;
-            
-            const totalLeave = anl + sl + upl + cl + ml + ptl + stl + spl + el;
-            
-            // Expected Workdays minus Paid Leaves so Att% isn't penalized
-            let paidLeaveDays = 0;
-            PAID_LEAVES.forEach(c => { paidLeaveDays += (counts[c]||0); });
-            const effectiveExpected = Math.max(0, expectedWorkdays - paidLeaveDays);
-            const attPct = effectiveExpected > 0 ? ((credit / effectiveExpected) * 100).toFixed(1) : '0.0';
-            
-            tr.querySelector('.col-p').innerText = counts.P||0; tr.querySelector('.col-a').innerText = counts.A||0; tr.querySelector('.col-att-pct').innerText = `${attPct}%`;
-            tr.querySelector('.col-cl').innerText = cl; tr.querySelector('.col-ml').innerText = ml; tr.querySelector('.col-ptl').innerText = ptl;
-            tr.querySelector('.col-stl').innerText = stl; tr.querySelector('.col-spl').innerText = spl; tr.querySelector('.col-el').innerText = el;
-            
-            tr.querySelector('.col-total-leave').innerText = totalLeave;
-            const act = parseFloat(tr.getAttribute('data-actualleave'))||0;
-            // Subtract ONLY leave types (exclude P, A, W, H, OD, DO) from annual allowance to find Remaining.
-            let leavesUtilizedThisMonth = 0;
-            LEAVE_TYPES.forEach(c => { leavesUtilizedThisMonth += (counts[c]||0); });
-            
-            // To get accurate remaining, we must get year-to-date utilized from DB.
-            const empId = tr.getAttribute('data-empid');
-            const year = document.getElementById('regYear').value;
-            const yearTotalLeave = calculateEmployeeLeaveBalance(empId, year);
-            tr.querySelector('.col-remaining-leave').innerText = Math.max(0, act - yearTotalLeave);
-        }
-        function saveMonthlyAttendance() {
-            const attDb = getAttendanceDb();
-            document.querySelectorAll('#monthlyBody .att-input').forEach(input => {
-                const key = `${input.closest('tr').getAttribute('data-empid').toLowerCase()}|${input.getAttribute('data-date')}`;
-                const code = input.value.trim().toUpperCase();
-                if (code === '-' || code === 'W') delete attDb[key]; else if (code) attDb[key] = code;
-            });
-            setAttendanceDb(attDb);
-            const status = document.getElementById('saveStatus'); status.innerText = 'Saved!'; setTimeout(() => status.innerText = '', 3000);
-            renderMonthlyRegister(); // re-render to update remaining balances correctly
-        }
-
-        // --- ANNUAL SUMMARY ---
+        // --- 8. ANNUAL SUMMARY (EXACT MATCH TO GOOGLE SHEET) ---
         function renderAnnualSummary() {
             const year = parseInt(document.getElementById('annualYear').value, 10);
             const employees = getEmployees().filter(e => e.status === 'Active');
             const attDb = getAttendanceDb();
+            const header = document.getElementById('annualSummaryHeader');
+            header.innerHTML = `<th class="sticky-col">Employee ID</th><th class="sticky-col-2">Employee Name</th><th>Designation</th>
+                <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th><th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th>
+                <th>Annual Expected Days</th><th>Annual Total Leave</th><th>Annual Reward Status</th><th>Annual Present (P)</th><th>Annual Absent (A)</th><th>Annual Attendance %</th>
+                <th>Annual Leave (ANL)</th><th>Annual Sick Leave (SL)</th><th>Annual Paid Leave (ANL/P)</th><th>Annual Paid Sick Leave (SL/P)</th><th>Unpaid Leave (UPL)</th>
+                <th>Public Holidays (H)</th><th>Day Off (DO)</th><th>On Duty (OD)</th><th>Compassionate Leave (CL)</th><th>Maternity Leave (ML)</th><th>Paternity Leave (PTL)</th>
+                <th>Study Leave (STL)</th><th>Special Leave (SPL)</th><th>Earned Leave (EL)</th><th>Months at 100%</th>`;
+            
             const tbody = document.getElementById('annualSummaryBody'); tbody.innerHTML = '';
-
-            if(!employees.length) return tbody.innerHTML = '<tr><td colspan="18">No data found.</td></tr>';
+            if(!employees.length) return tbody.innerHTML = '<tr><td colspan="36">No data found.</td></tr>';
 
             employees.forEach(emp => {
-                let ytdP = 0, ytdExpected = 0, ytdLeaves = 0, ytdCredit = 0;
-                let html = `<tr><td class="sticky-col"><strong>${emp.id}</strong></td><td class="sticky-col-2">${emp.name}</td>`;
+                let ytd = { exp:0, cred:0, p:0, a:0, leaves:0, perfect:0, counts:{} };
+                VALID_CODES.forEach(c => ytd.counts[c] = 0);
+                
+                let html = `<tr><td class="sticky-col"><strong>${emp.id}</strong></td><td class="sticky-col-2">${emp.name}</td><td>${emp.role}</td>`;
                 
                 for(let m=1; m<=12; m++) {
-                    const days = daysInMonth(year, m);
-                    let mP = 0, mCredit = 0, mExpected = 0, mPaidLeave = 0;
-                    for(let d=1; d<=days; d++) {
-                        const dateObj = new Date(year, m-1, d);
-                        if(dateObj >= new Date(emp.start) && dateObj.getDay() !== 0 && dateObj.getDay() !== 6) {
-                            mExpected++;
-                            const dateStr = `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                            const code = attDb[`${emp.id.toLowerCase()}|${dateStr}`] || '';
-                            if(code === 'P') mP++;
-                            if(['P', 'OD', 'DO', 'H'].includes(code)) mCredit++;
-                            if(LEAVE_TYPES.includes(code)) ytdLeaves++;
-                            if(PAID_LEAVES.includes(code)) mPaidLeave++;
-                        }
-                    }
-                    ytdP += mP; ytdCredit += mCredit;
-                    const effectiveExpected = Math.max(0, mExpected - mPaidLeave);
-                    ytdExpected += effectiveExpected;
-                    html += `<td>${mP}</td>`;
+                    const t = calculateEmployeeMonthTotals(emp, year, m, attDb);
+                    ytd.exp += t.expected; ytd.cred += t.cred; ytd.p += t.p; ytd.a += t.a; ytd.leaves += t.leaves;
+                    if(t.expected > 0 && t.pct === 1) ytd.perfect++;
+                    VALID_CODES.forEach(c => ytd.counts[c] += t.counts[c]);
+                    html += `<td>${t.p > 0 ? t.p : ''}</td>`;
                 }
 
-                const attPct = ytdExpected > 0 ? ((ytdCredit / ytdExpected) * 100).toFixed(1) : '0.0';
+                const attPct = ytd.exp > 0 ? ((ytd.cred / ytd.exp) * 100).toFixed(1) : '0.0';
+                const reward = (ytd.exp > 0 && attPct === '100.0') ? 'Eligible' : 'Not eligible';
+
                 html += `
-                    <td><strong>${ytdExpected}</strong></td>
-                    <td><strong>${ytdP}</strong></td>
-                    <td><strong>${ytdLeaves}</strong></td>
-                    <td><strong>${attPct}%</strong></td>
+                    <td>${ytd.exp}</td><td>${ytd.leaves}</td><td>${reward}</td><td>${ytd.p}</td><td>${ytd.a}</td><td>${attPct}%</td>
+                    <td>${ytd.counts['ANL']}</td><td>${ytd.counts['SL']}</td><td>${ytd.counts['ANL/P']}</td><td>${ytd.counts['SL/P']}</td><td>${ytd.counts['UPL']}</td>
+                    <td>${ytd.counts['H']}</td><td>${ytd.counts['DO']}</td><td>${ytd.counts['OD']}</td><td>${ytd.counts['CL']}</td><td>${ytd.counts['ML']}</td>
+                    <td>${ytd.counts['PTL']}</td><td>${ytd.counts['STL']}</td><td>${ytd.counts['SPL']}</td><td>${ytd.counts['EL']}</td><td>${ytd.perfect}</td>
                 </tr>`;
                 tbody.innerHTML += html;
             });
         }
 
-        // --- SEARCH ---
+        // --- 9. SEARCH & LEADERBOARD ---
         function runSearch() {
             const term = document.getElementById('searchTerm').value.trim().toLowerCase(), from = document.getElementById('searchFrom').value, to = document.getElementById('searchTo').value;
-            const attDb = getAttendanceDb(), empMap = new Map(getEmployees().map(e => [e.id.toLowerCase(), e.name]));
+            const attDb = getAttendanceDb(), employees = getEmployees();
+            const empMap = new Map(employees.map(e => [e.id.toLowerCase(), e]));
+            
+            const header = document.getElementById('searchHeader');
+            header.innerHTML = `<th>Employee ID</th><th>Employee Name</th><th>Date</th><th>Attendance Code</th>`;
+            HEADERS_SUMMARY.forEach(h => header.innerHTML += `<th>${h} (Month Totals)</th>`);
+            
             const tbody = document.getElementById('searchResultsBody'); tbody.innerHTML = '';
             let matches = [];
+            
             Object.entries(attDb).forEach(([key, code]) => {
-                const [empId, date] = key.split('|'); const empName = empMap.get(empId) || 'Unknown';
-                if (term && !empId.includes(term) && !empName.toLowerCase().includes(term)) return;
+                const [empId, date] = key.split('|'); const emp = empMap.get(empId);
+                if (!emp) return;
+                if (term && !empId.includes(term) && !emp.name.toLowerCase().includes(term)) return;
                 if (from && date < from) return; if (to && date > to) return;
-                matches.push({ empId: empId.toUpperCase(), empName, date, code });
+                matches.push({ empId: empId.toUpperCase(), emp, date, code });
             });
-            if (!matches.length) return tbody.innerHTML = '<tr><td colspan="4">No records.</td></tr>';
-            matches.sort((a, b) => b.date.localeCompare(a.date)).forEach(m => tbody.innerHTML += `<tr><td><strong>${m.empId}</strong></td><td>${m.empName}</td><td>${m.date}</td><td><span class="att-input code-${m.code.replace('/','')}">${m.code}</span></td></tr>`);
+            if (!matches.length) return tbody.innerHTML = '<tr><td colspan="24">No records found.</td></tr>';
+            
+            // Cache month totals so we don't recalculate the same month 30 times for an employee
+            const monthCache = {};
+            matches.sort((a, b) => b.date.localeCompare(a.date)).forEach(m => {
+                const year = parseInt(m.date.split('-')[0]), month = parseInt(m.date.split('-')[1]);
+                const cacheKey = `${m.empId}_${year}_${month}`;
+                if(!monthCache[cacheKey]) monthCache[cacheKey] = calculateEmployeeMonthTotals(m.emp, year, month, attDb);
+                const t = monthCache[cacheKey];
+                
+                tbody.innerHTML += `<tr><td><strong>${m.empId}</strong></td><td>${m.emp.name}</td><td>${m.date}</td><td><span class="att-input code-${m.code.replace('/','')}">${m.code}</span></td>
+                    <td>${t.expected}</td><td>${t.leaves}</td><td>${t.reward}</td><td>${t.p}</td><td>${t.a}</td><td>${(t.pct*100).toFixed(1)}%</td>
+                    <td>${t.counts['ANL']}</td><td>${t.counts['SL']}</td><td>${t.counts['ANL/P']}</td><td>${t.counts['UPL']}</td><td>${t.counts['H']}</td><td>${t.counts['DO']}</td>
+                    <td>${t.counts['OD']}</td><td>${t.counts['SL/P']}</td><td>${t.counts['CL']}</td><td>${t.counts['ML']}</td><td>${t.counts['PTL']}</td><td>${t.counts['STL']}</td>
+                    <td>${t.counts['SPL']}</td><td>${t.counts['EL']}</td></tr>`;
+            });
         }
         function clearSearch() { document.getElementById('searchTerm').value = ''; document.getElementById('searchFrom').value = ''; document.getElementById('searchTo').value = ''; runSearch(); }
         
+        function renderLeaderboard() {
+            const topN = parseInt(document.getElementById('lbTopN').value, 10);
+            const lbYear = document.getElementById('lbYear').value;
+            const lbMonth = document.getElementById('lbMonth').value;
+            const metric = document.getElementById('lbMetric').value;
+            
+            const employees = getEmployees().filter(e => e.status === 'Active'), attDb = getAttendanceDb();
+            const scores = employees.map(emp => {
+                let exp=0, p=0, cred=0;
+                for(let y=2025; y<=2029; y++) {
+                    if(lbYear !== 'All' && y !== parseInt(lbYear)) continue;
+                    for(let m=1; m<=12; m++){
+                        if(lbMonth !== 'All' && m !== parseInt(lbMonth)) continue;
+                        const t = calculateEmployeeMonthTotals(emp, y, m, attDb);
+                        exp += t.expected; p += t.p; cred += t.cred;
+                    }
+                }
+                const pct = exp > 0 ? cred/exp : 0;
+                let sortValue = 0;
+                if(metric === 'Overall Rank' || metric === 'Attendance %') sortValue = pct;
+                if(metric === 'Total Present (P)') sortValue = p;
+                if(metric === 'Total Expected Days') sortValue = exp;
+                
+                return { id: emp.id, name: emp.name, metricVal: sortValue, pct, exp, p };
+            });
+            
+            const tbody = document.getElementById('leaderboardBody'); tbody.innerHTML = '';
+            const topList = scores.sort((a, b) => b.metricVal - a.metricVal).slice(0, topN);
+            if (!topList.length) return tbody.innerHTML = '<tr><td colspan="6">No data</td></tr>';
+            
+            topList.forEach((s, idx) => {
+                let displayVal = s.metricVal;
+                if(metric === 'Overall Rank' || metric === 'Attendance %') displayVal = (s.pct*100).toFixed(1) + '%';
+                const reward = (s.exp > 0 && s.pct === 1) ? 'Eligible' : 'Not eligible';
+                tbody.innerHTML += `<tr><td><strong>#${idx+1}</strong></td><td>${s.id}</td><td>${s.name}</td><td>${metric}</td><td>${displayVal}</td><td>${reward}</td></tr>`;
+            });
+        }
+
+        // --- 10. BACKUP & RECOVERY ---
+        function exportDatabase() {
+            const data = { employees: getEmployees(), attendance: getAttendanceDb() };
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], {type: "application/json"}));
+            a.download = `HRSA_Database_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+        function importDatabase() {
+            const file = document.getElementById('backupFile').files[0];
+            if (!file) return alert("Select a .json backup file.");
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.employees && data.attendance) { setEmployees(data.employees); setAttendanceDb(data.attendance); alert("Database restored!"); } 
+                    else { alert("Invalid backup format."); }
+                } catch (err) { alert("Error reading file."); }
+            };
+            reader.readAsText(file);
+        }
     </script>
 </body>
 </html>
