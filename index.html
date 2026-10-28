@@ -29,11 +29,15 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .btn-back {
-            background-color: #70AD47;
-        }
-        /* This hides sections we don't want to see yet */
+        .btn-back { background-color: #70AD47; }
         .hidden { display: none; }
+        input {
+            padding: 10px;
+            margin: 5px;
+            width: 80%;
+            font-size: 16px;
+        }
+        ul { text-align: left; }
     </style>
 </head>
 <body>
@@ -46,33 +50,74 @@
         <button class="btn" onclick="showScreen('contractScreen')">2. Contract Tracker</button>
     </div>
 
-    <!-- ATTENDANCE TRACKER SCREEN -->
+    <!-- ATTENDANCE TRACKER MENU -->
     <div id="attendanceScreen" class="card hidden">
         <h1>Attendance Tracker</h1>
-        <p>Select an attendance module:</p>
-        <button class="btn">Employee Database</button>
-        <button class="btn">Monthly Attendance</button>
-        <button class="btn">Leaderboard</button>
+        <button class="btn" onclick="showScreen('employeeDbScreen')">👥 Employee Database</button>
+        <button class="btn">📅 Monthly Attendance</button>
+        <button class="btn">🏆 Leaderboard</button>
         <br><br>
         <button class="btn btn-back" onclick="showScreen('mainMenu')">⬅ Back to Main Menu</button>
     </div>
 
-    <!-- CONTRACT TRACKER SCREEN (Coming Later) -->
+    <!-- EMPLOYEE DATABASE SCREEN (NEW!) -->
+    <div id="employeeDbScreen" class="card hidden">
+        <h1>Employee Database</h1>
+        <p>Add a new employee below:</p>
+        
+        <input type="text" id="empId" placeholder="Employee ID (e.g. 001)">
+        <input type="text" id="empName" placeholder="Employee Name">
+        <input type="text" id="empRole" placeholder="Designation (e.g. Manager)">
+        <button class="btn" onclick="saveEmployee()">Save Employee</button>
+        
+        <h3>Saved Employees:</h3>
+        <ul id="employeeList"></ul>
+
+        <br><br>
+        <button class="btn btn-back" onclick="showScreen('attendanceScreen')">⬅ Back to Attendance</button>
+    </div>
+
+    <!-- CONTRACT TRACKER SCREEN -->
     <div id="contractScreen" class="card hidden">
         <h1>Contract Tracker</h1>
-        <p><em>We are building this bit by bit. This feature is coming soon!</em></p>
+        <p><em>We are building this bit by bit. Coming soon!</em></p>
         <br><br>
         <button class="btn btn-back" onclick="showScreen('mainMenu')">⬅ Back to Main Menu</button>
     </div>
 
-    <!-- This script makes the buttons switch the screens -->
+    <!-- THE APP LOGIC -->
     <script>
+        // This switches the screens
         function showScreen(screenName) {
             document.getElementById('mainMenu').classList.add('hidden');
             document.getElementById('attendanceScreen').classList.add('hidden');
             document.getElementById('contractScreen').classList.add('hidden');
+            document.getElementById('employeeDbScreen').classList.add('hidden');
             
             document.getElementById(screenName).classList.remove('hidden');
+        }
+
+        // This saves the employee to your browser's memory and shows it in a list
+        function saveEmployee() {
+            let id = document.getElementById('empId').value;
+            let name = document.getElementById('empName').value;
+            let role = document.getElementById('empRole').value;
+
+            if (id === "" || name === "") {
+                alert("Please enter an ID and a Name!");
+                return;
+            }
+
+            // Create a list item and add it to the screen
+            let list = document.getElementById('employeeList');
+            let newItem = document.createElement('li');
+            newItem.innerText = id + " - " + name + " (" + role + ")";
+            list.appendChild(newItem);
+
+            // Clear the boxes for the next person
+            document.getElementById('empId').value = "";
+            document.getElementById('empName').value = "";
+            document.getElementById('empRole').value = "";
         }
     </script>
 </body>
