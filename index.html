@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>HRSA Dashboard</title>
+    <title>HRSA App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,18 +29,51 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        .btn-back {
+            background-color: #70AD47;
+        }
+        /* This hides sections we don't want to see yet */
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>HRSA Attendance App</h1>
-        <p>Welcome to your new dashboard!</p>
-        
+    <!-- MAIN MENU -->
+    <div id="mainMenu" class="card">
+        <h1>HRSA Master App</h1>
+        <p>Please select a system to open:</p>
+        <button class="btn" onclick="showScreen('attendanceScreen')">1. Attendance Tracker</button>
+        <button class="btn" onclick="showScreen('contractScreen')">2. Contract Tracker</button>
+    </div>
+
+    <!-- ATTENDANCE TRACKER SCREEN -->
+    <div id="attendanceScreen" class="card hidden">
+        <h1>Attendance Tracker</h1>
+        <p>Select an attendance module:</p>
         <button class="btn">Employee Database</button>
         <button class="btn">Monthly Attendance</button>
         <button class="btn">Leaderboard</button>
+        <br><br>
+        <button class="btn btn-back" onclick="showScreen('mainMenu')">⬅ Back to Main Menu</button>
     </div>
 
+    <!-- CONTRACT TRACKER SCREEN (Coming Later) -->
+    <div id="contractScreen" class="card hidden">
+        <h1>Contract Tracker</h1>
+        <p><em>We are building this bit by bit. This feature is coming soon!</em></p>
+        <br><br>
+        <button class="btn btn-back" onclick="showScreen('mainMenu')">⬅ Back to Main Menu</button>
+    </div>
+
+    <!-- This script makes the buttons switch the screens -->
+    <script>
+        function showScreen(screenName) {
+            document.getElementById('mainMenu').classList.add('hidden');
+            document.getElementById('attendanceScreen').classList.add('hidden');
+            document.getElementById('contractScreen').classList.add('hidden');
+            
+            document.getElementById(screenName).classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
