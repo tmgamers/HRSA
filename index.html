@@ -30,6 +30,7 @@
             cursor: pointer;
         }
         .btn-back { background-color: #70AD47; }
+        .btn-danger { background-color: #c0392b; font-size: 12px; padding: 5px 10px; margin-left: 10px; }
         .hidden { display: none; }
         input {
             padding: 10px;
@@ -37,7 +38,16 @@
             width: 80%;
             font-size: 16px;
         }
-        ul { text-align: left; }
+        ul { text-align: left; list-style-type: none; padding: 0; }
+        li {
+            background: #eef2f5;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -60,7 +70,7 @@
         <button class="btn btn-back" onclick="showScreen('mainMenu')">⬅ Back to Main Menu</button>
     </div>
 
-    <!-- EMPLOYEE DATABASE SCREEN (NEW!) -->
+    <!-- EMPLOYEE DATABASE SCREEN -->
     <div id="employeeDbScreen" class="card hidden">
         <h1>Employee Database</h1>
         <p>Add a new employee below:</p>
@@ -68,6 +78,7 @@
         <input type="text" id="empId" placeholder="Employee ID (e.g. 001)">
         <input type="text" id="empName" placeholder="Employee Name">
         <input type="text" id="empRole" placeholder="Designation (e.g. Manager)">
+        <br>
         <button class="btn" onclick="saveEmployee()">Save Employee</button>
         
         <h3>Saved Employees:</h3>
@@ -85,9 +96,8 @@
         <button class="btn btn-back" onclick="showScreen('mainMenu')">⬅ Back to Main Menu</button>
     </div>
 
-    <!-- THE APP LOGIC -->
+    <!-- SCRIPT WITH LOCAL STORAGE -->
     <script>
-        // This switches the screens
         function showScreen(screenName) {
             document.getElementById('mainMenu').classList.add('hidden');
             document.getElementById('attendanceScreen').classList.add('hidden');
@@ -97,28 +107,60 @@
             document.getElementById(screenName).classList.remove('hidden');
         }
 
-        // This saves the employee to your browser's memory and shows it in a list
-        function saveEmployee() {
-            let id = document.getElementById('empId').value;
-            let name = document.getElementById('empName').value;
-            let role = document.getElementById('empRole').value;
+        // Get employees from permanent storage, or return an empty list
+        function getStoredEmployees() {
+            let data = localStorage.getItem('hrsa_employees');
+            return data ? JSON.parse(data) : [];
+        }
 
-            if (id === "" || name === "") {
+        // Display all stored employees on the screen
+        function renderEmployees() {
+            let employees = getStoredEmployees();
+            let list = document.getElementById('employeeList');
+            list.innerHTML = '';
+
+            employees.forEach((emp, index) => {
+                let li = document.createElement('li');
+                li.innerHTML = `
+                    <span><strong>${emp.id}</strong> - ${emp.name} (${emp.role})</span>
+                    <button class="btn btn-danger" onclick="deleteEmployee(${index})">Delete</button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        // Save a new employee to permanent storage
+        function saveEmployee() {
+            let id = document.getElementById('empId').value.trim();
+            let name = document.getElementById('empName').value.trim();
+            let role = document.getElementById('empRole').value.trim();
+
+            if (!id || !name) {
                 alert("Please enter an ID and a Name!");
                 return;
             }
 
-            // Create a list item and add it to the screen
-            let list = document.getElementById('employeeList');
-            let newItem = document.createElement('li');
-            newItem.innerText = id + " - " + name + " (" + role + ")";
-            list.appendChild(newItem);
+            let employees = getStoredEmployees();
+            employees.push({ id, name, role });
+            localStorage.setItem('hrsa_employees', JSON.stringify(employees));
 
-            // Clear the boxes for the next person
-            document.getElementById('empId').value = "";
-            document.getElementById('empName').value = "";
-            document.getElementById('empRole').value = "";
+            document.getElementById('empId').value = '';
+            document.getElementById('empName').value = '';
+            document.getElementById('empRole').value = '';
+
+            renderEmployees();
         }
+
+        // Remove an employee from permanent storage
+        function deleteEmployee(index) {
+            let employees = getStoredEmployees();
+            employees.splice(index, 1);
+            localStorage.setItem('hrsa_employees', JSON.stringify(employees));
+            renderEmployees();
+        }
+
+        // Load employees automatically when the page opens
+        window.onload = renderEmployees;
     </script>
 </body>
 </html>
