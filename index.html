@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HRSA Attendance Application</title>
+    <title>HRSA Web Application</title>
     <style>
         :root {
             --primary: #17365D;
@@ -12,6 +12,7 @@
             --bg: #F4F7F6;
             --btn-green: #70AD47;
             --btn-red: #C00000;
+            --btn-blue: #0070C0;
         }
         body {
             font-family: Arial, sans-serif;
@@ -52,6 +53,7 @@
         .btn:hover { opacity: 0.9; }
         .btn-success { background-color: var(--btn-green); }
         .btn-danger { background-color: var(--btn-red); }
+        .btn-blue { background-color: var(--btn-blue); padding: 15px 25px; font-size: 18px; }
         .btn-back { background-color: #595959; }
         .hidden { display: none !important; }
         
@@ -83,50 +85,17 @@
             background: #fff;
             margin-top: 15px;
         }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            white-space: nowrap;
-            font-size: 11px;
-        }
-        th, td {
-            border: 1px solid var(--border);
-            padding: 5px 6px;
-            text-align: center;
-        }
-        th {
-            background-color: var(--accent);
-            color: #fff;
-            font-weight: bold;
-        }
+        table { border-collapse: collapse; width: 100%; white-space: nowrap; font-size: 11px; }
+        th, td { border: 1px solid var(--border); padding: 5px 6px; text-align: center; }
+        th { background-color: var(--accent); color: #fff; font-weight: bold; }
         .th-weekend { background-color: #D9D9D9; color: #333; }
-        .sticky-col {
-            position: sticky;
-            left: 0;
-            background: #fff;
-            z-index: 2;
-        }
+        .sticky-col { position: sticky; left: 0; background: #fff; z-index: 2; }
         th.sticky-col { background: var(--accent); z-index: 3; }
-        .sticky-col-2 {
-            position: sticky;
-            left: 80px;
-            background: #fff;
-            z-index: 2;
-        }
+        .sticky-col-2 { position: sticky; left: 80px; background: #fff; z-index: 2; }
         th.sticky-col-2 { background: var(--accent); z-index: 3; }
         
-        .att-input {
-            width: 48px;
-            padding: 4px;
-            text-align: center;
-            border: none;
-            font-weight: bold;
-            font-size: 11px;
-            text-transform: uppercase;
-            border-radius: 2px;
-        }
+        .att-input { width: 48px; padding: 4px; text-align: center; border: none; font-weight: bold; font-size: 11px; text-transform: uppercase; border-radius: 2px; }
         
-        /* Attendance Colors */
         .code-P { background: #E2F0D9; color: #006100; }
         .code-A { background: #FCE4D6; color: #9C0006; }
         .code-ANL { background: #DDEBF7; color: #1F1F1F; }
@@ -138,17 +107,18 @@
         .code-DO { background: #FFF2CC; color: #7F6000; }
         .code-OD { background: #D9EAF7; color: #17365D; }
         .code-W { background: #FFF2CC; color: #000000; }
-        
-        /* New Statutory Leaves */
         .code-CL { background: #EAD1DC; color: #4C1130; }
         .code-ML { background: #F4CCCC; color: #783F04; }
         .code-PTL { background: #C9DAF8; color: #1155CC; }
         .code-STL { background: #D9D2E9; color: #351C75; }
         .code-SPL { background: #FCE5CD; color: #783F04; }
         .code-EL { background: #D0E0E3; color: #0C343D; }
-        
         .code-OUT { background: #E7E6E6; color: #888888; }
         .totals-header { background: #A6A6A6; color: #000; font-weight: bold; }
+        
+        .geo-status { padding: 10px; margin-top: 10px; border-radius: 4px; font-weight: bold; text-align: center; }
+        .geo-success { background-color: #E2F0D9; color: #006100; border: 1px solid #70AD47; }
+        .geo-error { background-color: #FCE4D6; color: #9C0006; border: 1px solid #C00000; }
     </style>
 </head>
 <body>
@@ -160,14 +130,36 @@
         </div>
     </div>
 
+    <!-- MAIN MENU -->
     <div id="mainMenu" class="card">
         <h2>Select System</h2>
-        <div style="margin-top: 20px;">
-            <button class="btn" style="padding: 15px 25px; font-size: 16px;" onclick="nav('attendanceMenu')">1. Attendance Tracker</button>
-            <button class="btn" style="padding: 15px 25px; font-size: 16px; background-color: #7f8c8d;" onclick="alert('Contract Tracker coming soon.')">2. Contract Tracker</button>
+        <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px;">
+            <button class="btn btn-blue" onclick="nav('employeePortalScreen')">👤 Employee Portal (Clock-In)</button>
+            <button class="btn" style="padding: 15px 25px; font-size: 18px;" onclick="nav('attendanceMenu')">📊 HR Admin Control Center</button>
+            <button class="btn" style="padding: 15px 25px; font-size: 18px; background-color: #7f8c8d;" onclick="alert('Contract Tracker coming soon.')">📝 Contract Tracker</button>
         </div>
     </div>
 
+    <!-- EMPLOYEE PORTAL (NEW CLOCK-IN SYSTEM) -->
+    <div id="employeePortalScreen" class="card hidden" style="max-width: 500px; margin: 0 auto; text-align: center;">
+        <h2>Daily Attendance Clock-In</h2>
+        <p>Ensure your device location (GPS) is turned on. You must be at the office to clock in.</p>
+        
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label style="text-align: center;">Enter Your Employee ID</label>
+            <input type="text" id="clockInEmpId" placeholder="e.g., TMG001" style="text-align: center; font-size: 18px; text-transform: uppercase;">
+        </div>
+
+        <button class="btn btn-success" style="padding: 20px 40px; font-size: 20px; border-radius: 50px;" onclick="attemptClockIn()">
+            📍 CLOCK IN
+        </button>
+
+        <div id="geoStatus" class="geo-status hidden"></div>
+        <br><br>
+        <button class="btn btn-back" onclick="nav('mainMenu')">⬅ Back to Home</button>
+    </div>
+
+    <!-- HR ADMIN MENU -->
     <div id="attendanceMenu" class="card hidden">
         <h2>Attendance Control Center</h2>
         <div class="form-row" style="justify-content: center; margin-top: 15px;">
@@ -178,294 +170,229 @@
         </div>
     </div>
 
+    <!-- EMPLOYEE DATABASE (HR ONLY) -->
     <div id="employeeDbScreen" class="card hidden">
         <h2>Employee Database & Leave Allowance</h2>
         <div class="form-row">
-            <div class="form-group">
-                <label>Employee ID *</label>
-                <input type="text" id="newEmpId" placeholder="e.g. TMG001">
-            </div>
-            <div class="form-group">
-                <label>Employee Name *</label>
-                <input type="text" id="newEmpName" placeholder="Full Name">
-            </div>
-            <div class="form-group">
-                <label>Designation *</label>
-                <input type="text" id="newEmpRole" placeholder="Role/Title">
-            </div>
-            <div class="form-group">
-                <label>Actual Leave Allowance (Days) *</label>
-                <input type="number" id="newEmpLeaveAllowance" placeholder="e.g. 21, 28" min="0" value="21">
-            </div>
-            <div class="form-group">
-                <label>Start Date *</label>
-                <input type="date" id="newEmpStart" value="2025-01-01">
-            </div>
+            <div class="form-group"><label>Employee ID *</label><input type="text" id="newEmpId" placeholder="e.g. TMG001"></div>
+            <div class="form-group"><label>Employee Name *</label><input type="text" id="newEmpName" placeholder="Full Name"></div>
+            <div class="form-group"><label>Designation *</label><input type="text" id="newEmpRole" placeholder="Role/Title"></div>
+            <div class="form-group"><label>Leave Allowance *</label><input type="number" id="newEmpLeaveAllowance" placeholder="21" value="21"></div>
+            <div class="form-group"><label>Start Date *</label><input type="date" id="newEmpStart" value="2025-01-01"></div>
             <div class="form-group">
                 <label>Status</label>
-                <select id="newEmpStatus">
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                </select>
+                <select id="newEmpStatus"><option value="Active">Active</option><option value="Inactive">Inactive</option></select>
             </div>
             <div class="form-group" style="align-self: flex-end;">
-                <button class="btn btn-success" onclick="addEmployee()">Submit Employee</button>
+                <button class="btn btn-success" onclick="addEmployee()">Submit</button>
             </div>
         </div>
-
         <div class="table-wrapper">
             <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Designation</th>
-                        <th>Actual Leave Allowance</th>
-                        <th>Start Date</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>ID</th><th>Name</th><th>Designation</th><th>Actual Leave</th><th>Start Date</th><th>Status</th><th>Action</th></tr></thead>
                 <tbody id="employeeTableBody"></tbody>
             </table>
         </div>
-        <br>
-        <button class="btn btn-back" onclick="nav('attendanceMenu')">⬅ Back to Attendance Menu</button>
+        <br><button class="btn btn-back" onclick="nav('attendanceMenu')">⬅ Back</button>
     </div>
 
+    <!-- MONTHLY REGISTER (HR ONLY) -->
     <div id="monthlyRegisterScreen" class="card hidden">
         <h2>Monthly Attendance Register</h2>
         <div class="form-row">
             <div class="form-group">
-                <label>Select Year</label>
+                <label>Year</label>
                 <select id="regYear" onchange="renderMonthlyRegister()">
-                    <option value="2025">2025</option>
-                    <option value="2026" selected>2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
-                    <option value="2029">2029</option>
+                    <option value="2025">2025</option><option value="2026" selected>2026</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>Select Month</label>
+                <label>Month</label>
                 <select id="regMonth" onchange="renderMonthlyRegister()">
-                    <option value="1">January</option>
-                    <option value="2">February</option>
-                    <option value="3">March</option>
-                    <option value="4">April</option>
-                    <option value="5">May</option>
-                    <option value="6">June</option>
-                    <option value="7">July</option>
-                    <option value="8">August</option>
-                    <option value="9">September</option>
-                    <option value="10">October</option>
-                    <option value="11">November</option>
-                    <option value="12">December</option>
+                    <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+                    <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+                    <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+                    <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
                 </select>
             </div>
             <div style="align-self: flex-end;">
-                <button class="btn btn-success" onclick="saveMonthlyAttendance()">💾 Submit Attendance</button>
+                <button class="btn btn-success" onclick="saveMonthlyAttendance()">💾 Submit</button>
                 <span id="saveStatus" style="margin-left: 10px; font-weight: bold; color: green;"></span>
             </div>
         </div>
-
         <div class="table-wrapper">
             <table id="monthlyTable">
-                <thead>
-                    <tr id="headerRow"></tr>
-                </thead>
+                <thead><tr id="headerRow"></tr></thead>
                 <tbody id="monthlyBody"></tbody>
             </table>
         </div>
-        <br>
-        <button class="btn btn-back" onclick="nav('attendanceMenu')">⬅ Back to Attendance Menu</button>
+        <br><button class="btn btn-back" onclick="nav('attendanceMenu')">⬅ Back</button>
     </div>
 
+    <!-- SEARCH SCREEN (HR ONLY) -->
     <div id="searchScreen" class="card hidden">
         <h2>Attendance Search</h2>
         <div class="form-row">
-            <div class="form-group">
-                <label>Employee Name or ID</label>
-                <input type="text" id="searchTerm" placeholder="Search...">
-            </div>
-            <div class="form-group">
-                <label>From Date</label>
-                <input type="date" id="searchFrom">
-            </div>
-            <div class="form-group">
-                <label>To Date</label>
-                <input type="date" id="searchTo">
-            </div>
+            <div class="form-group"><label>Name or ID</label><input type="text" id="searchTerm" placeholder="Search..."></div>
+            <div class="form-group"><label>From</label><input type="date" id="searchFrom"></div>
+            <div class="form-group"><label>To</label><input type="date" id="searchTo"></div>
             <div style="align-self: flex-end;">
                 <button class="btn btn-success" onclick="runSearch()">Search</button>
                 <button class="btn btn-back" onclick="clearSearch()">Clear</button>
             </div>
         </div>
-
         <div class="table-wrapper">
             <table>
-                <thead>
-                    <tr>
-                        <th>Employee ID</th>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>Code</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>Employee ID</th><th>Name</th><th>Date</th><th>Code</th></tr></thead>
                 <tbody id="searchResultsBody"></tbody>
             </table>
         </div>
-        <br>
-        <button class="btn btn-back" onclick="nav('attendanceMenu')">⬅ Back to Attendance Menu</button>
+        <br><button class="btn btn-back" onclick="nav('attendanceMenu')">⬅ Back</button>
     </div>
 
+    <!-- LEADERBOARD (HR ONLY) -->
     <div id="leaderboardScreen" class="card hidden">
         <h2>Attendance Leaderboard</h2>
         <div class="form-row">
-            <div class="form-group">
-                <label>Show Top</label>
-                <select id="lbTopN" onchange="renderLeaderboard()">
-                    <option value="5">5</option>
-                    <option value="10" selected>10</option>
-                    <option value="20">20</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Year</label>
-                <select id="lbYear" onchange="renderLeaderboard()">
-                    <option value="2025">2025</option>
-                    <option value="2026" selected>2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
-                    <option value="2029">2029</option>
-                </select>
-            </div>
+            <div class="form-group"><label>Show Top</label><select id="lbTopN" onchange="renderLeaderboard()"><option value="5">5</option><option value="10" selected>10</option></select></div>
+            <div class="form-group"><label>Year</label><select id="lbYear" onchange="renderLeaderboard()"><option value="2025">2025</option><option value="2026" selected>2026</option></select></div>
         </div>
-
         <div class="table-wrapper">
             <table>
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Present (P)</th>
-                        <th>Attendance %</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>Rank</th><th>ID</th><th>Name</th><th>Present (P)</th><th>Attendance %</th></tr></thead>
                 <tbody id="leaderboardBody"></tbody>
             </table>
         </div>
-        <br>
-        <button class="btn btn-back" onclick="nav('attendanceMenu')">⬅ Back to Attendance Menu</button>
+        <br><button class="btn btn-back" onclick="nav('attendanceMenu')">⬅ Back</button>
     </div>
 
     <script>
-        // Included all valid codes including the 6 new ones
-        const VALID_CODES = [
-            'P', 'A', 'ANL', 'ANL/P', 'SL', 'SL/P', 'UPL', 'H', 'OD', 'DO', 'W', 
-            'CL', 'ML', 'PTL', 'STL', 'SPL', 'EL', '-'
-        ];
+        // CORE SETTINGS
+        const VALID_CODES = ['P', 'A', 'ANL', 'ANL/P', 'SL', 'SL/P', 'UPL', 'H', 'OD', 'DO', 'W', 'CL', 'ML', 'PTL', 'STL', 'SPL', 'EL', '-'];
         const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        
+        // GEOFENCE SETTINGS (Set to Freetown, Sierra Leone for now)
+        const OFFICE_LAT = 8.484; 
+        const OFFICE_LON = -13.229;
+        const ALLOWED_RADIUS_METERS = 200; // Employee must be within 200 meters
 
         function nav(screenId) {
-            const screens = ['mainMenu', 'attendanceMenu', 'employeeDbScreen', 'monthlyRegisterScreen', 'searchScreen', 'leaderboardScreen'];
+            const screens = ['mainMenu', 'attendanceMenu', 'employeeDbScreen', 'monthlyRegisterScreen', 'searchScreen', 'leaderboardScreen', 'employeePortalScreen'];
             screens.forEach(s => document.getElementById(s).classList.add('hidden'));
             document.getElementById(screenId).classList.remove('hidden');
         }
 
-        function getEmployees() {
-            const data = localStorage.getItem('hrsa_employees');
-            return data ? JSON.parse(data) : [];
+        function getEmployees() { return JSON.parse(localStorage.getItem('hrsa_employees')) || []; }
+        function setEmployees(data) { localStorage.setItem('hrsa_employees', JSON.stringify(data)); }
+        function getAttendanceDb() { return JSON.parse(localStorage.getItem('hrsa_attendance_db')) || {}; }
+        function setAttendanceDb(data) { localStorage.setItem('hrsa_attendance_db', JSON.stringify(data)); }
+
+        // --- GPS CLOCK-IN LOGIC --- //
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // Earth radius in meters
+            const φ1 = lat1 * Math.PI/180, φ2 = lat2 * Math.PI/180;
+            const Δφ = (lat2-lat1) * Math.PI/180, Δλ = (lon2-lon1) * Math.PI/180;
+            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ/2) * Math.sin(Δλ/2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); // Distance in meters
         }
 
-        function setEmployees(data) {
-            localStorage.setItem('hrsa_employees', JSON.stringify(data));
-        }
+        function attemptClockIn() {
+            const empId = document.getElementById('clockInEmpId').value.trim().toUpperCase();
+            const statusBox = document.getElementById('geoStatus');
+            statusBox.classList.remove('hidden', 'geo-success', 'geo-error');
 
-        function getAttendanceDb() {
-            const data = localStorage.getItem('hrsa_attendance_db');
-            return data ? JSON.parse(data) : {};
-        }
-
-        function setAttendanceDb(data) {
-            localStorage.setItem('hrsa_attendance_db', JSON.stringify(data));
-        }
-
-        function openEmployeeDb() {
-            nav('employeeDbScreen');
-            renderEmployees();
-        }
-
-        function renderEmployees() {
-            const employees = getEmployees();
-            const tbody = document.getElementById('employeeTableBody');
-            tbody.innerHTML = '';
-            if (!employees.length) {
-                tbody.innerHTML = '<tr><td colspan="7">No employees found. Add one above.</td></tr>';
+            if (!empId) {
+                statusBox.innerText = "Please enter your Employee ID.";
+                statusBox.classList.add('geo-error');
                 return;
             }
-            employees.forEach((emp, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${emp.id}</strong></td>
-                    <td>${emp.name}</td>
-                    <td>${emp.role}</td>
-                    <td><strong>${emp.leaveAllowance || 0} days</strong></td>
-                    <td>${emp.start}</td>
-                    <td>${emp.status}</td>
-                    <td><button class="btn btn-danger" style="padding: 3px 8px; font-size:11px;" onclick="deleteEmployee(${index})">Delete</button></td>
-                `;
-                tbody.appendChild(tr);
+
+            const employees = getEmployees();
+            const empExists = employees.some(e => e.id.toUpperCase() === empId);
+            if (!empExists) {
+                statusBox.innerText = "Employee ID not found. Contact HR.";
+                statusBox.classList.add('geo-error');
+                return;
+            }
+
+            if (!navigator.geolocation) {
+                statusBox.innerText = "Geolocation is not supported by your browser.";
+                statusBox.classList.add('geo-error');
+                return;
+            }
+
+            statusBox.innerText = "Locating... Please allow location access.";
+            statusBox.style.backgroundColor = "#FFF2CC";
+            statusBox.style.color = "#000";
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const distance = calculateDistance(lat, lon, OFFICE_LAT, OFFICE_LON);
+
+                    if (distance <= ALLOWED_RADIUS_METERS) {
+                        saveEmployeePunch(empId);
+                        statusBox.innerText = `✅ Success! You are clocked in for today. (Dist: ${Math.round(distance)}m)`;
+                        statusBox.classList.add('geo-success');
+                        statusBox.style.backgroundColor = ""; 
+                    } else {
+                        statusBox.innerText = `❌ Error: You are too far from the office. (Dist: ${Math.round(distance)}m)`;
+                        statusBox.classList.add('geo-error');
+                        statusBox.style.backgroundColor = "";
+                    }
+                },
+                (error) => {
+                    statusBox.innerText = "❌ Location access denied. We cannot verify you are at the office.";
+                    statusBox.classList.add('geo-error');
+                    statusBox.style.backgroundColor = "";
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+
+        function saveEmployeePunch(empId) {
+            const attDb = getAttendanceDb();
+            const today = new Date();
+            const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            const key = `${empId.toLowerCase()}|${dateStr}`;
+            
+            // Mark present 'P'
+            attDb[key] = 'P';
+            setAttendanceDb(attDb);
+        }
+        // --- END GPS LOGIC --- //
+
+
+        function openEmployeeDb() { nav('employeeDbScreen'); renderEmployees(); }
+        function renderEmployees() {
+            const tbody = document.getElementById('employeeTableBody');
+            tbody.innerHTML = '';
+            const employees = getEmployees();
+            if (!employees.length) return tbody.innerHTML = '<tr><td colspan="7">No employees found.</td></tr>';
+            employees.forEach((emp, i) => {
+                tbody.innerHTML += `<tr><td><strong>${emp.id}</strong></td><td>${emp.name}</td><td>${emp.role}</td><td><strong>${emp.leaveAllowance||0}</strong></td><td>${emp.start}</td><td>${emp.status}</td><td><button class="btn btn-danger" onclick="deleteEmployee(${i})">Delete</button></td></tr>`;
             });
         }
 
         function addEmployee() {
-            const id = document.getElementById('newEmpId').value.trim();
-            const name = document.getElementById('newEmpName').value.trim();
-            const role = document.getElementById('newEmpRole').value.trim();
-            const leaveAllowance = parseFloat(document.getElementById('newEmpLeaveAllowance').value) || 0;
-            const start = document.getElementById('newEmpStart').value;
-            const status = document.getElementById('newEmpStatus').value;
-
-            if (!id || !name || !role || !start) {
-                alert('Please provide Employee ID, Name, Designation, and Start Date.');
-                return;
-            }
-
+            const id = document.getElementById('newEmpId').value.trim(), name = document.getElementById('newEmpName').value.trim();
+            const role = document.getElementById('newEmpRole').value.trim(), leave = parseFloat(document.getElementById('newEmpLeaveAllowance').value)||0;
+            const start = document.getElementById('newEmpStart').value, status = document.getElementById('newEmpStatus').value;
+            if (!id || !name || !role || !start) return alert('Fill all required fields.');
             const employees = getEmployees();
-            if (employees.some(e => e.id.toLowerCase() === id.toLowerCase())) {
-                alert('Employee ID already exists.');
-                return;
-            }
-
-            employees.push({ id, name, role, leaveAllowance, start, status });
-            setEmployees(employees);
-
-            document.getElementById('newEmpId').value = '';
-            document.getElementById('newEmpName').value = '';
-            document.getElementById('newEmpRole').value = '';
-            document.getElementById('newEmpLeaveAllowance').value = '21';
-            renderEmployees();
+            if (employees.some(e => e.id.toLowerCase() === id.toLowerCase())) return alert('ID exists.');
+            employees.push({ id, name, role, leaveAllowance: leave, start, status });
+            setEmployees(employees); renderEmployees();
+        }
+        function deleteEmployee(i) {
+            if(!confirm('Delete?')) return;
+            const emp = getEmployees(); emp.splice(i, 1); setEmployees(emp); renderEmployees();
         }
 
-        function deleteEmployee(index) {
-            if (!confirm('Are you sure you want to delete this employee?')) return;
-            const employees = getEmployees();
-            employees.splice(index, 1);
-            setEmployees(employees);
-            renderEmployees();
-        }
-
-        function openMonthlyRegister() {
-            nav('monthlyRegisterScreen');
-            renderMonthlyRegister();
-        }
-
-        function daysInMonth(year, month) {
-            return new Date(year, month, 0).getDate();
-        }
-
+        function openMonthlyRegister() { nav('monthlyRegisterScreen'); renderMonthlyRegister(); }
+        function daysInMonth(y, m) { return new Date(y, m, 0).getDate(); }
+        
         function renderMonthlyRegister() {
             const year = parseInt(document.getElementById('regYear').value, 10);
             const month = parseInt(document.getElementById('regMonth').value, 10);
@@ -474,326 +401,137 @@
             const attDb = getAttendanceDb();
 
             const headerRow = document.getElementById('headerRow');
-            headerRow.innerHTML = `
-                <th class="sticky-col">ID</th>
-                <th class="sticky-col-2">Name</th>
-            `;
-
-            for (let d = 1; d <= totalDays; d++) {
+            headerRow.innerHTML = `<th class="sticky-col">ID</th><th class="sticky-col-2">Name</th>`;
+            for (let d=1; d<=totalDays; d++) {
                 const dateObj = new Date(year, month - 1, d);
-                const dayOfWeek = DAY_NAMES[dateObj.getDay()];
-                const isWeekend = (dateObj.getDay() === 0 || dateObj.getDay() === 6);
-                headerRow.innerHTML += `<th class="${isWeekend ? 'th-weekend' : ''}">${String(d).padStart(2, '0')}<br><span style="font-size:10px;">${dayOfWeek}</span></th>`;
+                const isWeekend = (dateObj.getDay()===0 || dateObj.getDay()===6);
+                headerRow.innerHTML += `<th class="${isWeekend?'th-weekend':''}">${String(d).padStart(2,'0')}<br><span style="font-size:10px;">${DAY_NAMES[dateObj.getDay()]}</span></th>`;
             }
-
             headerRow.innerHTML += `
-                <th class="totals-header" style="color:#006100;">P</th>
-                <th class="totals-header" style="color:#9C0006;">A</th>
-                <th class="totals-header">Att %</th>
-                <th class="totals-header">ANL</th>
-                <th class="totals-header">SL</th>
-                <th class="totals-header">UPL</th>
-                <th class="totals-header">H</th>
-                <th class="totals-header">DO</th>
-                <th class="totals-header">OD</th>
-                <th class="totals-header">CL</th>
-                <th class="totals-header">ML</th>
-                <th class="totals-header">PTL</th>
-                <th class="totals-header">STL</th>
-                <th class="totals-header">SPL</th>
-                <th class="totals-header">EL</th>
-                <th class="totals-header">TOTAL<br>LEAVE</th>
-                <th class="totals-header">ACTUAL<br>LEAVE</th>
-                <th class="totals-header">UTILIZE<br>LEAVE</th>
-                <th class="totals-header">REMAINING<br>LEAVE</th>
-            `;
+                <th class="totals-header" style="color:#006100;">P</th><th class="totals-header" style="color:#9C0006;">A</th><th class="totals-header">Att %</th>
+                <th class="totals-header">ANL</th><th class="totals-header">SL</th><th class="totals-header">UPL</th><th class="totals-header">H</th><th class="totals-header">DO</th><th class="totals-header">OD</th>
+                <th class="totals-header">CL</th><th class="totals-header">ML</th><th class="totals-header">PTL</th><th class="totals-header">STL</th><th class="totals-header">SPL</th><th class="totals-header">EL</th>
+                <th class="totals-header">TOTAL<br>LEAVE</th><th class="totals-header">ACTUAL<br>LEAVE</th><th class="totals-header">UTILIZE<br>LEAVE</th><th class="totals-header">REM<br>LEAVE</th>`;
 
             const tbody = document.getElementById('monthlyBody');
             tbody.innerHTML = '';
-
-            if (!employees.length) {
-                tbody.innerHTML = `<tr><td colspan="${totalDays + 21}">No active employees found.</td></tr>`;
-                return;
-            }
+            if (!employees.length) return tbody.innerHTML = `<tr><td colspan="${totalDays+21}">No data</td></tr>`;
 
             employees.forEach(emp => {
                 const tr = document.createElement('tr');
                 tr.setAttribute('data-empid', emp.id);
                 tr.setAttribute('data-actualleave', emp.leaveAllowance || 0);
+                let rowHtml = `<td class="sticky-col"><strong>${emp.id}</strong></td><td class="sticky-col-2">${emp.name}</td>`;
 
-                let rowHtml = `
-                    <td class="sticky-col"><strong>${emp.id}</strong></td>
-                    <td class="sticky-col-2">${emp.name}</td>
-                `;
-
-                for (let d = 1; d <= totalDays; d++) {
+                for (let d=1; d<=totalDays; d++) {
                     const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                    const dateObj = new Date(year, month - 1, d);
-                    const isWeekend = (dateObj.getDay() === 0 || dateObj.getDay() === 6);
-                    const empStart = new Date(emp.start);
-                    const isEmployed = (dateObj >= empStart);
-
-                    const recordKey = `${emp.id.toLowerCase()}|${dateStr}`;
-                    let val = attDb[recordKey] || (isWeekend ? 'W' : (isEmployed ? '-' : '-'));
-
-                    let codeClass = `code-${val.replace('/', '')}`;
-                    if (!isEmployed && !isWeekend) codeClass = 'code-OUT';
-
-                    rowHtml += `
-                        <td>
-                            <input type="text" class="att-input ${codeClass}" 
-                                   value="${val}" 
-                                   data-date="${dateStr}"
-                                   data-weekend="${isWeekend}"
-                                   data-employed="${isEmployed}"
-                                   onchange="handleCodeChange(this)">
-                        </td>
-                    `;
+                    const dateObj = new Date(year, month-1, d);
+                    const isWeekend = (dateObj.getDay()===0 || dateObj.getDay()===6);
+                    const isEmployed = (dateObj >= new Date(emp.start));
+                    let val = attDb[`${emp.id.toLowerCase()}|${dateStr}`] || (isWeekend ? 'W' : (isEmployed ? '-' : '-'));
+                    let codeClass = !isEmployed && !isWeekend ? 'code-OUT' : `code-${val.replace('/','')}`;
+                    rowHtml += `<td><input type="text" class="att-input ${codeClass}" value="${val}" data-date="${dateStr}" data-weekend="${isWeekend}" data-employed="${isEmployed}" onchange="handleCodeChange(this)"></td>`;
                 }
-
-                rowHtml += `
-                    <td class="col-p">0</td>
-                    <td class="col-a">0</td>
-                    <td class="col-att-pct">0.0%</td>
-                    <td class="col-anl">0</td>
-                    <td class="col-sl">0</td>
-                    <td class="col-upl">0</td>
-                    <td class="col-h">0</td>
-                    <td class="col-do">0</td>
-                    <td class="col-od">0</td>
-                    <td class="col-cl">0</td>
-                    <td class="col-ml">0</td>
-                    <td class="col-ptl">0</td>
-                    <td class="col-stl">0</td>
-                    <td class="col-spl">0</td>
-                    <td class="col-el">0</td>
-                    <td class="col-total-leave" style="font-weight:bold;">0</td>
-                    <td class="col-actual-leave" style="font-weight:bold;">${emp.leaveAllowance || 0}</td>
-                    <td class="col-utilize-leave" style="font-weight:bold; color:#C00000;">0</td>
-                    <td class="col-remaining-leave" style="font-weight:bold; color:#006100;">${emp.leaveAllowance || 0}</td>
-                `;
-
-                tr.innerHTML = rowHtml;
-                tbody.appendChild(tr);
-                calculateRowTotals(tr);
+                
+                rowHtml += `<td class="col-p">0</td><td class="col-a">0</td><td class="col-att-pct">0.0%</td><td class="col-anl">0</td><td class="col-sl">0</td><td class="col-upl">0</td><td class="col-h">0</td><td class="col-do">0</td><td class="col-od">0</td>
+                <td class="col-cl">0</td><td class="col-ml">0</td><td class="col-ptl">0</td><td class="col-stl">0</td><td class="col-spl">0</td><td class="col-el">0</td>
+                <td class="col-total-leave" style="font-weight:bold;">0</td><td class="col-actual-leave" style="font-weight:bold;">${emp.leaveAllowance||0}</td>
+                <td class="col-utilize-leave" style="font-weight:bold; color:#C00000;">0</td><td class="col-remaining-leave" style="font-weight:bold; color:#006100;">${emp.leaveAllowance||0}</td>`;
+                tr.innerHTML = rowHtml; tbody.appendChild(tr); calculateRowTotals(tr);
             });
         }
 
         function handleCodeChange(input) {
             let val = input.value.trim().toUpperCase();
-            if (!VALID_CODES.includes(val) && val !== '') {
-                alert(`Invalid attendance code "${val}". Allowed: ${VALID_CODES.join(', ')}`);
-                input.value = '-';
-                val = '-';
-            }
+            if (!VALID_CODES.includes(val) && val !== '') { alert(`Invalid code. Allowed: ${VALID_CODES.join(', ')}`); val = '-'; input.value = val; }
             input.className = `att-input code-${val.replace('/', '')}`;
             calculateRowTotals(input.closest('tr'));
         }
 
         function calculateRowTotals(tr) {
-            const inputs = tr.querySelectorAll('.att-input');
-            const counts = {};
-            VALID_CODES.forEach(c => counts[c] = 0);
-
-            let expectedWorkdays = 0;
-            let credit = 0;
-
-            inputs.forEach(input => {
+            const counts = {}; VALID_CODES.forEach(c => counts[c] = 0);
+            let expectedWorkdays = 0, credit = 0;
+            tr.querySelectorAll('.att-input').forEach(input => {
                 const code = input.value.trim().toUpperCase();
-                const isWeekend = input.getAttribute('data-weekend') === 'true';
-                const isEmployed = input.getAttribute('data-employed') === 'true';
-
+                const isWeekend = input.getAttribute('data-weekend') === 'true', isEmployed = input.getAttribute('data-employed') === 'true';
                 if (counts[code] !== undefined) counts[code]++;
-
                 if (isEmployed && !isWeekend) {
                     expectedWorkdays++;
-                    if (['P', 'OD', 'DO', 'H'].includes(code)) {
-                        credit++;
-                    }
+                    if (['P', 'OD', 'DO', 'H'].includes(code)) credit++;
                 }
             });
-
-            const p = counts['P'] || 0;
-            const a = counts['A'] || 0;
-            const anl = (counts['ANL'] || 0) + (counts['ANL/P'] || 0);
-            const sl = (counts['SL'] || 0) + (counts['SL/P'] || 0);
-            const upl = counts['UPL'] || 0;
-            const h = counts['H'] || 0;
-            const do_count = counts['DO'] || 0;
-            const od = counts['OD'] || 0;
-            const cl = counts['CL'] || 0;
-            const ml = counts['ML'] || 0;
-            const ptl = counts['PTL'] || 0;
-            const stl = counts['STL'] || 0;
-            const spl = counts['SPL'] || 0;
-            const el = counts['EL'] || 0;
-
-            const totalLeave = anl + sl + upl + cl + ml + ptl + stl + spl + el;
-            const actualLeave = parseFloat(tr.getAttribute('data-actualleave')) || 0;
+            const anl = (counts['ANL']||0)+(counts['ANL/P']||0), sl = (counts['SL']||0)+(counts['SL/P']||0);
+            const cl=counts.CL||0, ml=counts.ML||0, ptl=counts.PTL||0, stl=counts.STL||0, spl=counts.SPL||0, el=counts.EL||0;
             const utilizeLeave = anl + sl + cl + ml + ptl + stl + spl + el; 
-            const remainingLeave = Math.max(0, actualLeave - utilizeLeave);
+            const attPct = Math.max(0, expectedWorkdays - utilizeLeave) > 0 ? ((credit / Math.max(0, expectedWorkdays - utilizeLeave)) * 100).toFixed(1) : '0.0';
             
-            // Adjust expected workdays for paid leaves so attendance % isn't penalized
-            const paidStatLeaves = utilizeLeave;
-            const effectiveExpected = Math.max(0, expectedWorkdays - paidStatLeaves);
-            const attPct = effectiveExpected > 0 ? ((credit / effectiveExpected) * 100).toFixed(1) : '0.0';
-
-            tr.querySelector('.col-p').innerText = p;
-            tr.querySelector('.col-a').innerText = a;
+            tr.querySelector('.col-p').innerText = counts.P||0; tr.querySelector('.col-a').innerText = counts.A||0;
             tr.querySelector('.col-att-pct').innerText = `${attPct}%`;
-            tr.querySelector('.col-anl').innerText = anl;
-            tr.querySelector('.col-sl').innerText = sl;
-            tr.querySelector('.col-upl').innerText = upl;
-            tr.querySelector('.col-h').innerText = h;
-            tr.querySelector('.col-do').innerText = do_count;
-            tr.querySelector('.col-od').innerText = od;
-            tr.querySelector('.col-cl').innerText = cl;
-            tr.querySelector('.col-ml').innerText = ml;
-            tr.querySelector('.col-ptl').innerText = ptl;
-            tr.querySelector('.col-stl').innerText = stl;
-            tr.querySelector('.col-spl').innerText = spl;
-            tr.querySelector('.col-el').innerText = el;
+            tr.querySelector('.col-anl').innerText = anl; tr.querySelector('.col-sl').innerText = sl;
+            tr.querySelector('.col-upl').innerText = counts.UPL||0; tr.querySelector('.col-h').innerText = counts.H||0;
+            tr.querySelector('.col-do').innerText = counts.DO||0; tr.querySelector('.col-od').innerText = counts.OD||0;
+            tr.querySelector('.col-cl').innerText = cl; tr.querySelector('.col-ml').innerText = ml; tr.querySelector('.col-ptl').innerText = ptl;
+            tr.querySelector('.col-stl').innerText = stl; tr.querySelector('.col-spl').innerText = spl; tr.querySelector('.col-el').innerText = el;
             
-            tr.querySelector('.col-total-leave').innerText = totalLeave;
-            tr.querySelector('.col-actual-leave').innerText = actualLeave;
+            tr.querySelector('.col-total-leave').innerText = anl+sl+(counts.UPL||0)+cl+ml+ptl+stl+spl+el;
+            const act = parseFloat(tr.getAttribute('data-actualleave'))||0;
             tr.querySelector('.col-utilize-leave').innerText = utilizeLeave;
-            tr.querySelector('.col-remaining-leave').innerText = remainingLeave;
+            tr.querySelector('.col-remaining-leave').innerText = Math.max(0, act - utilizeLeave);
         }
 
         function saveMonthlyAttendance() {
             const attDb = getAttendanceDb();
-            const inputs = document.querySelectorAll('#monthlyBody .att-input');
-
-            inputs.forEach(input => {
-                const empId = input.closest('tr').getAttribute('data-empid');
-                const date = input.getAttribute('data-date');
+            document.querySelectorAll('#monthlyBody .att-input').forEach(input => {
+                const key = `${input.closest('tr').getAttribute('data-empid').toLowerCase()}|${input.getAttribute('data-date')}`;
                 const code = input.value.trim().toUpperCase();
-                const key = `${empId.toLowerCase()}|${date}`;
-
-                if (code === '-' || code === 'W') {
-                    delete attDb[key];
-                } else if (code) {
-                    attDb[key] = code;
-                }
+                if (code === '-' || code === 'W') delete attDb[key]; else if (code) attDb[key] = code;
             });
-
             setAttendanceDb(attDb);
-            const status = document.getElementById('saveStatus');
-            status.innerText = 'Saved attendance successfully!';
-            setTimeout(() => status.innerText = '', 3000);
+            const status = document.getElementById('saveStatus'); status.innerText = 'Saved!'; setTimeout(() => status.innerText = '', 3000);
         }
 
-        function openSearchScreen() {
-            nav('searchScreen');
-            runSearch();
-        }
-
+        function openSearchScreen() { nav('searchScreen'); runSearch(); }
         function runSearch() {
             const term = document.getElementById('searchTerm').value.trim().toLowerCase();
-            const from = document.getElementById('searchFrom').value;
-            const to = document.getElementById('searchTo').value;
-            const attDb = getAttendanceDb();
-            const employees = getEmployees();
-            const empMap = new Map(employees.map(e => [e.id.toLowerCase(), e.name]));
-
-            const tbody = document.getElementById('searchResultsBody');
-            tbody.innerHTML = '';
-
+            const from = document.getElementById('searchFrom').value, to = document.getElementById('searchTo').value;
+            const attDb = getAttendanceDb(), empMap = new Map(getEmployees().map(e => [e.id.toLowerCase(), e.name]));
+            const tbody = document.getElementById('searchResultsBody'); tbody.innerHTML = '';
             let matches = [];
             Object.entries(attDb).forEach(([key, code]) => {
-                const [empId, date] = key.split('|');
-                const empName = empMap.get(empId) || 'Unknown';
+                const [empId, date] = key.split('|'); const empName = empMap.get(empId) || 'Unknown';
                 if (term && !empId.includes(term) && !empName.toLowerCase().includes(term)) return;
-                if (from && date < from) return;
-                if (to && date > to) return;
+                if (from && date < from) return; if (to && date > to) return;
                 matches.push({ empId: empId.toUpperCase(), empName, date, code });
             });
-
-            matches.sort((a, b) => a.date.localeCompare(b.date));
-            if (!matches.length) {
-                tbody.innerHTML = '<tr><td colspan="4">No attendance records found matching filters.</td></tr>';
-                return;
-            }
-
-            matches.forEach(m => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${m.empId}</strong></td>
-                        <td>${m.empName}</td>
-                        <td>${m.date}</td>
-                        <td><span class="att-input code-${m.code.replace('/', '')}">${m.code}</span></td>
-                    </tr>
-                `;
+            if (!matches.length) return tbody.innerHTML = '<tr><td colspan="4">No records.</td></tr>';
+            matches.sort((a, b) => a.date.localeCompare(b.date)).forEach(m => {
+                tbody.innerHTML += `<tr><td><strong>${m.empId}</strong></td><td>${m.empName}</td><td>${m.date}</td><td><span class="att-input code-${m.code.replace('/','')}">${m.code}</span></td></tr>`;
             });
         }
-
-        function clearSearch() {
-            document.getElementById('searchTerm').value = '';
-            document.getElementById('searchFrom').value = '';
-            document.getElementById('searchTo').value = '';
-            runSearch();
-        }
-
-        function openLeaderboard() {
-            nav('leaderboardScreen');
-            renderLeaderboard();
-        }
-
+        function clearSearch() { document.getElementById('searchTerm').value = ''; document.getElementById('searchFrom').value = ''; document.getElementById('searchTo').value = ''; runSearch(); }
+        
+        function openLeaderboard() { nav('leaderboardScreen'); renderLeaderboard(); }
         function renderLeaderboard() {
-            const topN = parseInt(document.getElementById('lbTopN').value, 10);
-            const year = parseInt(document.getElementById('lbYear').value, 10);
-            const employees = getEmployees().filter(e => e.status === 'Active');
-            const attDb = getAttendanceDb();
-
+            const topN = parseInt(document.getElementById('lbTopN').value, 10), year = parseInt(document.getElementById('lbYear').value, 10);
+            const employees = getEmployees().filter(e => e.status === 'Active'), attDb = getAttendanceDb();
             const scores = employees.map(emp => {
-                let expectedDays = 0;
-                let present = 0;
-                let credit = 0;
-
-                for (let m = 0; m < 12; m++) {
-                    const days = daysInMonth(year, m + 1);
-                    for (let d = 1; d <= days; d++) {
+                let exp=0, p=0, cred=0;
+                for(let m=0;m<12;m++){
+                    for(let d=1; d<=daysInMonth(year,m+1); d++){
                         const dateObj = new Date(year, m, d);
-                        const isWeekend = (dateObj.getDay() === 0 || dateObj.getDay() === 6);
-                        const empStart = new Date(emp.start);
-                        const isEmployed = (dateObj >= empStart);
-
-                        const dateStr = `${year}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                        const code = attDb[`${emp.id.toLowerCase()}|${dateStr}`] || '';
-
-                        if (isEmployed && !isWeekend) {
-                            expectedDays++;
-                            if (code === 'P') present++;
-                            if (['P', 'OD', 'DO', 'H'].includes(code)) credit++;
+                        if(dateObj.getDay()!==0 && dateObj.getDay()!==6 && dateObj >= new Date(emp.start)){
+                            exp++;
+                            const code = attDb[`${emp.id.toLowerCase()}|${year}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`] || '';
+                            if(code==='P') p++; if(['P','OD','DO','H'].includes(code)) cred++;
                         }
                     }
                 }
-
-                const percent = expectedDays > 0 ? (credit / expectedDays) : 0;
-                return { id: emp.id, name: emp.name, present, percent };
+                return { id: emp.id, name: emp.name, present: p, percent: exp>0 ? cred/exp : 0 };
             });
-
-            scores.sort((a, b) => b.percent - a.percent || b.present - a.present);
-            const tbody = document.getElementById('leaderboardBody');
-            tbody.innerHTML = '';
-            const topList = scores.slice(0, topN);
-
-            if (!topList.length) {
-                tbody.innerHTML = '<tr><td colspan="5">No active employee records found.</td></tr>';
-                return;
-            }
-
-            topList.forEach((s, idx) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>#${idx + 1}</strong></td>
-                        <td>${s.id}</td>
-                        <td>${s.name}</td>
-                        <td>${s.present}</td>
-                        <td>${(s.percent * 100).toFixed(1)}%</td>
-                    </tr>
-                `;
-            });
+            const tbody = document.getElementById('leaderboardBody'); tbody.innerHTML = '';
+            const topList = scores.sort((a, b) => b.percent - a.percent || b.present - a.present).slice(0, topN);
+            if (!topList.length) return tbody.innerHTML = '<tr><td colspan="5">No data</td></tr>';
+            topList.forEach((s, idx) => tbody.innerHTML += `<tr><td><strong>#${idx+1}</strong></td><td>${s.id}</td><td>${s.name}</td><td>${s.present}</td><td>${(s.percent*100).toFixed(1)}%</td></tr>`);
         }
     </script>
 </body>
